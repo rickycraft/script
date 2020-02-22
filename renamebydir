@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import os
+import time
+import sys
+# rename by date
+
+start_time = time.time()
+file_iniziali = 0
+renamed_files = 0
+isverbose = False
+
+#get file extension
+def getext(filename):
+    return filename.split('.')[-1]
+
+#verbose
+def verbose(text):
+	if isverbose:
+		print(text)
+
+#valid input
+if len(sys.argv) > 1 and len(sys.argv) < 4 and os.path.exists(sys.argv[-1]):
+    if len(sys.argv) == 3 and '-' in sys.argv[1]:
+    	if sys.argv[1] == '-v':
+    		isverbose = True
+
+    directory = sys.argv[-1]
+    os.chdir(directory)
+    file_iniziali += len(os.listdir(os.getcwd()))
+    splitDir = directory.split('/')
+    if directory[-1] == '/':
+        folder = splitDir[-2]
+    else:
+        folder = splitDir[-1]
+
+    # names = ['ciao.jpg', 'ciao1.jpg', 'ciao2.jpg', 'lol1.mp4', 'lol2.mp4', 'gg.mkv']
+    names = []
+    for ls in os.listdir(os.getcwd()):
+        if os.path.isfile(ls) and ls[0] != '.':
+            if folder in ls or folder.lower() in ls: #not any file already named
+                newname = 'ez'+ls
+                verbose('adjusting name of '+ ls + ' into ' + newname)
+                os.rename(ls, newname)
+                names.append(newname)
+            else:
+                names.append(ls)
+    names.sort()
+#get extensions
+    exts = []
+    for name in names:
+        if not getext(name) in exts:
+            exts.append(getext(name))
+#building filename
+    index = 1 #starting index
+    for ext in exts:
+        files = []
+        for name in names:
+            if getext(name) == ext:
+                files.append(name)
+#renaming file
+        for file in files:
+            renamed_files += 1
+            newname = folder + str(index) + '.' + ext
+            verbose('renaming ' + file + ' into ' + newname)
+            os.rename(file, newname)
+            index += 1
+#final check
+    file_finali = len(os.listdir(os.getcwd()))
+    diff_file = file_iniziali - file_finali
+    verbose(50*'#')
+    if diff_file == 0:
+        print('renamed', renamed_files, 'files in', str(round(time.time() - start_time), 5) + 's')
+    else:
+        print('something went wrong, file difference is ', diff_file)
+else:
+    print('invalid folder')
