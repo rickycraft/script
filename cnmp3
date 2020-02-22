@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+outputdir = "/Users/rick/GoogleDrive/Musica/2017"
+
 import subprocess
 import sys
 import os
@@ -9,14 +11,14 @@ def encode(inp, outp):
         subprocess.call(cmd0)
 ############
 def move(inp):
-        cmd1 = ["mv", inp, "/Users/rick/GoogleDrive/Musica/2017"]
+        cmd1 = ["mv", inp, outputdir]
         subprocess.call(cmd1)
 ############
 songs = sys.argv[1:]
 
 for song in songs:
         if not os.path.isfile(song):
-                print("Canzone non trovata:", song)
+                print("Song not found:", song)
                 sys.exit(1)
 		
 for song in songs:
