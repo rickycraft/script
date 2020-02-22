@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+import os
+
+path = "/Users/rick/Git/"
+
+dirs = os.listdir(path)[2:] #remove iconfile and .DS_Store
+dirs.remove("archive") #not a git repo
+os.chdir(path)
+
+
+for dir in dirs:
+	print("Updating", dir)
+	os.chdir(path+dir)
+	subprocess.call(["git", "pull"])
+	print("#####")
