@@ -46,7 +46,7 @@ def shellRm(f):
 
 
 def syncDevice():
-    if (titaniumCheck()):
+    if (not titaniumCheck()):
         i = input("Do you want to update Titanium ? [Y/n] ")
         if (i != "n"):
             print("Updating titanium")
