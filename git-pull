@@ -6,11 +6,13 @@ import os
 
 path = "/Users/rick/Git/"
 
-dirs = os.listdir(path)[2:] #remove iconfile and .DS_Store
-dirs.remove("archive") #not a git repo
+dirs = os.listdir(path)
+dirs = list(filter(lambda dir: os.path.isdir(path+dir), dirs))
+dirs = list(filter(lambda dir: os.path.exists(path+dir+"/.git"), dirs))
+
 os.chdir(path)
 
-
+print("#####")
 for dir in dirs:
 	print("Updating", dir)
 	os.chdir(path+dir)
