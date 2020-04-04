@@ -35,6 +35,7 @@ def titaniumSet():
 def syncPhotos():
     print("\nSyncing photos\n")
     for f in syncFolder:
+        print("#####\nSyncing",f,"\n#####")
         subprocess.call(["rsync", "-avhzP", "--size-only", source+f, dest+f])
     print("Done syncing")
 
