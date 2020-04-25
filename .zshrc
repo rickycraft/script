@@ -62,3 +62,5 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 source $ZSH/oh-my-zsh.sh
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+autoload -Uz compinit && compinit
