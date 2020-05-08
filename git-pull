@@ -4,7 +4,11 @@ import subprocess
 import sys
 import os
 
-path = "/Users/rick/Git/"
+path =  os.environ.get('GIT_HOME_DIR')
+
+if (path == None):
+	print("can't find GIT_HOME_DIR")
+	sys.exit(1)
 
 dirs = os.listdir(path)
 dirs = list(filter(lambda dir: os.path.isdir(path+dir), dirs))
