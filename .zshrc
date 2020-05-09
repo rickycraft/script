@@ -18,7 +18,6 @@ setopt auto_list
 setopt no_beep # don't beep on error
 
 #alias
-alias srvpi='ssh root@192.168.1.100'
 alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 alias poweroff='sudo shutdown -h now'
 alias rsync='rsync -avzhP'
@@ -41,6 +40,7 @@ export SDKROOT=macosx10.14
 export EDITOR="/usr/bin/nano"
 export REPORTTIME=10
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+export GIT_HOME_DIR="/Users/rick/Git/"
 
 # User configuration
 export MANPATH="/usr/local/man:$MANPATH"
