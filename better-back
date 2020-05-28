@@ -7,15 +7,12 @@ source = "/Volumes/CROCCANTE/OnePlus"
 dest = "/Volumes/rick/OP6/sdcard"
 
 Titanium = "/TitaniumBackup/"
-syncFolder = ["/DCIM/Camera/", "/Pictures/", "/WhatsApp/Media/WhatsApp Images/", "/WhatsApp/Media/WhatsApp Video/", Titanium]
-
+syncFolder = ["/DCIM/Camera/", "/WhatsApp/Media/WhatsApp Images/", "/WhatsApp/Media/WhatsApp Video/"]
+delSyncFolder = ["/Pictures/", Titanium]
 
 avoid = ["/Android", "/data", "/DCIM/.thumbnails", "/Pictures/.thumbnails"]
 dateFile = "/Volumes/CROCCANTE/date.txt"
 today = date.today()
-
-# TODO titanium automatic avoid backup
-
 
 def titaniumCheck():
     f = open(dateFile, "r")
@@ -33,11 +30,16 @@ def titaniumSet():
 
 
 def syncPhotos():
-    print("\nSyncing photos\n")
     for f in syncFolder:
         print("#####\nSyncing",f,"\n#####")
         subprocess.call(["rsync", "-avhzP", "--size-only", source+f, dest+f])
-    print("Done syncing")
+        #print("#####\nEnd sync",f,"\n#####")
+
+def delSyncPhotos():
+    for f in delSyncFolder:
+        print("#####\nSyncing",f,"\n#####")
+        subprocess.run(["rsync", "-avhzP", "--size-only", "--del", source+f, dest+f])
+        #print("#####\nEnd sync",f,"\n#####")
 
 
 def shellRm(f):
@@ -65,7 +67,7 @@ def checkMount():
 def checkDevice():
     o = subprocess.check_output(["adb", "devices"]).decode("utf-8")
     print(o)
-    if ("29d3c130" in o):
+    if ("29d3c130	device" in o):
         return True
     else:
         return False
@@ -73,7 +75,7 @@ def checkDevice():
 # main
 
 if (checkMount() == False):
-    print("Dir not mounted")
+    print("Volumes not mounted")
     exit(0)
 if (checkDevice() == False):
     print("Device not connected")
@@ -81,3 +83,4 @@ if (checkDevice() == False):
 
 syncDevice()
 syncPhotos()
+delSyncPhotos()
