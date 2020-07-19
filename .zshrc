@@ -23,7 +23,7 @@ alias poweroff='sudo shutdown -h now'
 alias rsync='rsync -avzhP'
 alias cask='brew cask'
 
-plugins=(brew osx extract web-search sudo adb fzf)
+plugins=(brew osx extract web-search sudo adb fzf zsh-autosuggestions)
 
 ZSH_THEME="riccardo"
 
@@ -31,7 +31,7 @@ ZSH_THEME="riccardo"
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/opt/X11/bin:/usr/local/bin/my
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/rick/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # MacOS Libraries
 export SDKROOT=macosx10.14
@@ -40,13 +40,13 @@ export SDKROOT=macosx10.14
 export EDITOR="/usr/bin/nano"
 export REPORTTIME=10
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-export GIT_HOME_DIR="/Users/rick/Git/"
+export GIT_HOME_DIR="~/Git/"
 
 # User configuration
 export MANPATH="/usr/local/man:$MANPATH"
 
 #fzf
-export FZF_BASE="/usr/local/bin/fzf"
+export FZF_BASE=$(which fzf)
 
 # Uncomment the following line to disable fuzzy completion
 # export DISABLE_FZF_AUTO_COMPLETION="true"
@@ -61,6 +61,5 @@ export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 source $ZSH/oh-my-zsh.sh
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 autoload -Uz compinit && compinit
