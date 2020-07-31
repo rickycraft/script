@@ -11,22 +11,20 @@ syncFolder = ["/DCIM/Camera/", "/WhatsApp/Media/WhatsApp Images/", "/WhatsApp/Me
 delSyncFolder = ["/Pictures/", Titanium]
 
 avoid = ["/Android", "/data", "/DCIM/.thumbnails", "/Pictures/.thumbnails"]
-dateFile = "/Volumes/CROCCANTE/date.txt"
+dateFile = source+"/sdcard"+Titanium+"date.txt"
 today = date.today()
 
 def titaniumCheck():
-    f = open(dateFile, "r")
-    d = datetime.strptime(f.readline(), "%Y%m%d").date()
-    f.close()
+    with open(dateFile, "r") as f:
+        d = datetime.strptime(f.readline(), "%Y%m%d").date()
     # if last backup is before today
     return (d < today)
 
 
 def titaniumSet():
-    f = open(dateFile, "w")
-    d = today.strftime("%Y%m%d")
-    f.write(d)
-    f.close()
+    with open(dateFile, "w") as f:
+        d = today.strftime("%Y%m%d")
+        f.write(d)
 
 
 def syncPhotos():
