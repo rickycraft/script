@@ -8,7 +8,13 @@ from subprocess import PIPE, DEVNULL, STDOUT
 
 
 EXIT_ERROR = 0
-JUNK_FILES = ["/Android", "/data", "/DCIM/.thumbnails", "/Pictures/.thumbnails"]
+JUNK_FILES = [
+    "/Android",
+    "/data",
+    "/DCIM/.thumbnails",
+    "/Pictures/.thumbnails",
+    "/Movies/.thumbnails",
+]
 SDCARD = "/sdcard"
 TITANIUM_BACK = "/TitaniumBackup"
 DEBUG = False
@@ -19,6 +25,7 @@ options = {
     "titanium": False,
     "junk": False,
     "device_id": "",
+    "sync_dir": False,
 }
 _pipe = DEVNULL
 
@@ -35,6 +42,7 @@ def create_parser():
     parser.add_argument("-t", help="Update titanium", action="store_true")
     parser.add_argument("-i", help="Specify device id", metavar="DEVICE_ID")
     parser.add_argument("-D", help="Debug mode", action="store_true")
+    parser.add_argument("-l", help="Sync by list dir", action="store_true")
     return parser
 
 
@@ -48,7 +56,7 @@ def parse_args():
         global DEBUG
         DEBUG = arg["D"]
         global _pipe
-        _pipe = PIPE
+        _pipe = None
     # check that at leas one output is valid
     if not (arg["e"] ^ bool(arg["o"])):
         sys.stderr.write("Both -o and -e specified or none")
@@ -63,9 +71,9 @@ def parse_args():
 
 # check if a device is connected
 def check_device():
-    subprocess.run(["adb", "start-server"])
+    subprocess.run(["adb", "start-server"], stdout=DEVNULL, stderr=DEVNULL)
     out = subprocess.run(
-        ["adb", "get-serialno"], stdout=PIPE, stderr=_pipe, universal_newlines=True,
+        ["adb", "get-serialno"], stdout=PIPE, stderr=DEVNULL, universal_newlines=True,
     ).stdout.strip()
 
     if out != "":
@@ -107,6 +115,7 @@ def read_flags(arg: dict):
     options["delete"] = arg["d"]
     options["junk"] = arg["c"]
     options["titanium"] = arg["t"]
+    options["sync_dir"] = arg["l"]
     options["device_id"] = arg["i"] if arg["i"] else ""
 
 
@@ -130,7 +139,7 @@ def adb_shell_rm(cmd: str):
         return
     f = SDCARD + cmd
     print("shell rm", f) if DEBUG else None
-    subprocess.run(["adb", "shell", "rm", "-rf", f], stdout=_pipe, stderr=PIPE)
+    subprocess.run(["adb", "shell", "rm", "-rf", f], stdout=_pipe)
 
 
 def del_junk():
@@ -142,11 +151,7 @@ def del_junk():
 def del_titanium():
     if options["titanium"]:
         print("Removing Titanium")
-        subprocess.run(
-            ["rm", "-rf", options["out_dir"] + TITANIUM_BACK],
-            stdout=_pipe,
-            stderr=PIPE,
-        )
+        subprocess.run(["rm", "-rf", options["out_dir"] + TITANIUM_BACK], stdout=_pipe)
         if len(dir_to_sync) > 0:
             if not TITANIUM_BACK in dir_to_sync:
                 dir_to_sync.append(TITANIUM_BACK)
@@ -155,6 +160,7 @@ def del_titanium():
 def adb_sync():
     del_junk()
     del_titanium()
+    folder_list()
     # create command
     cmd = ["adb-sync", "-R", "-t"]
     cmd.append("-d") if options["delete"] else None
@@ -162,17 +168,31 @@ def adb_sync():
     if len(dir_to_sync) > 0:
         for f in dir_to_sync:
             _cmd = cmd.copy()
-            _cmd.append(SDCARD + f)
+            _cmd.append(SDCARD + f + "/")
             _cmd.append(options["out_dir"] + f)
             print("running:", _cmd) if DEBUG else print(
                 "Pulling", _cmd[-2], "->", _cmd[-1]
             )
-            subprocess.run(_cmd, capture_output=not DEBUG)
+            subprocess.run(_cmd, stderr=DEVNULL, stdout=_pipe)
     else:
         cmd.append(SDCARD + "/")
         cmd.append(options["out_dir"])
         print("running:", cmd) if DEBUG else print("Pulling", cmd[-2], "->", cmd[-1])
-        subprocess.run(cmd, capture_output=not DEBUG)
+        subprocess.run(cmd, stderr=DEVNULL, stdout=_pipe)
+
+
+def folder_list():
+    if not options["sync_dir"]:
+        return
+
+    cmd = ["adb", "shell", "ls", "/sdcard"]
+    out = (
+        subprocess.run(cmd, stderr=DEVNULL, stdout=PIPE, universal_newlines=True)
+        .stdout.strip()
+        .split("\n")
+    )
+    for f in out:
+        dir_to_sync.append("/" + f)
 
 
 if __name__ == "__main__":
