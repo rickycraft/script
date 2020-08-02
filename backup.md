@@ -1,6 +1,6 @@
 # Android backup on Linux
 
-Backup your phone with custom options. Options *-o* or *-e* must be specified.
+Backup your phone with custom options. Options _-o_ or _-e_ must be specified.
 
 | Flag        | Description                                                         |
 | ----------- | ------------------------------------------------------------------- |
@@ -12,19 +12,20 @@ Backup your phone with custom options. Options *-o* or *-e* must be specified.
 | **-c**      | Clean clutter files.                                                |
 | **-t**      | Update titanium.                                                    |
 | **-D**      | Enable debug                                                        |
+| **-i**      | Specify the device id                                               |
 
 ## Features to implement
 
-- check for device connected
-- check for adb sync
-- read from argument
-- destination folder
-	- read from arg
-	- read from env
-	- check validity
-	- check for *"/sdcard"*
-- read from file folders
-- hardcode clutter files
-- subprocess command
-- run command w/ debug or not
-- generate help
+-   check for device connected
+-   check for adb sync
+-   read from argument
+-   destination folder
+    -   read from arg
+    -   read from env
+    -   check validity
+    -   check for _"/sdcard"_
+-   read from file folders
+-   hardcode clutter files
+-   subprocess command
+-   run command w/ debug or not
+-   generate help
