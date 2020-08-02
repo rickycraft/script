@@ -169,10 +169,10 @@ def adb_sync():
             )
             subprocess.run(_cmd, capture_output=not DEBUG)
     else:
-        cmd.append(SDCARD)
+        cmd.append(SDCARD + "/")
         cmd.append(options["out_dir"])
         print("running:", cmd) if DEBUG else print("Pulling", cmd[-2], "->", cmd[-1])
-        subprocess.run(cmd, stderr=STDOUT if DEBUG else DEVNULL, stdout=_pipe)
+        subprocess.run(cmd, capture_output=not DEBUG)
 
 
 if __name__ == "__main__":
