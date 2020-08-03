@@ -15,6 +15,12 @@ JUNK_FILES = [
     "/Pictures/.thumbnails",
     "/Movies/.thumbnails",
 ]
+BLACKLIST_DIR = [
+    "mipush",
+    "beam",
+    "amap",
+    "Tencent",
+]
 SDCARD = "/sdcard"
 TITANIUM_BACK = "/TitaniumBackup"
 DEBUG = False
@@ -92,7 +98,7 @@ def read_destination(arg: dict):
     if arg["e"]:
         path = os.getenv("ADB_SYNC_DEST")
         if not path:
-            sys.stderr.write("no env var is set")
+            sys.stderr.write("no env var is set\n")
             exit(EXIT_ERROR)
     # take path form argument
     elif arg["o"]:
@@ -103,7 +109,7 @@ def read_destination(arg: dict):
         if os.path.exists(path):
             options["out_dir"] = path
         else:
-            sys.stderr.write("path does not exist")
+            sys.stderr.write("path does not exist\n")
             exit(EXIT_ERROR)
     else:
         sys.stderr.write("File path error")
@@ -168,6 +174,7 @@ def adb_sync():
     if len(dir_to_sync) > 0:
         for f in dir_to_sync:
             _cmd = cmd.copy()
+            # trailing slash to open dir like rsync
             _cmd.append(SDCARD + f + "/")
             _cmd.append(options["out_dir"] + f)
             print("running:", _cmd) if DEBUG else print(
@@ -192,7 +199,8 @@ def folder_list():
         .split("\n")
     )
     for f in out:
-        dir_to_sync.append("/" + f)
+        if f not in BLACKLIST_DIR:
+            dir_to_sync.append("/" + f)
 
 
 if __name__ == "__main__":
