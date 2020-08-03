@@ -240,9 +240,13 @@ def folder_list():
 
 
 if __name__ == "__main__":
-    parse_args()
-    if not check_device():
-        sys.stderr.write("No device connected\n")
+    try:
+        parse_args()
+        if not check_device():
+            sys.stderr.write("No device connected\n")
+            # exit(EXIT_ERROR)
+        print("#" * 20) if DEBUG else None
+        adb_sync()
+    except KeyboardInterrupt:
+        print("Stopping")
         exit(EXIT_ERROR)
-    print("#" * 20) if DEBUG else None
-    adb_sync()
