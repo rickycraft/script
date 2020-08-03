@@ -5,6 +5,7 @@ import os
 import argparse
 import sys
 from subprocess import PIPE, DEVNULL, STDOUT
+from datetime import date
 
 
 EXIT_ERROR = 0
@@ -160,8 +161,11 @@ def del_junk():
 
 
 def del_titanium():
-    if (not options["titanium"]) or options["dry_run"]:
+    if options["dry_run"]:
         return
+    if not (check_titanium_date() or options["titanium"]):
+        return
+
     print("Removing Titanium")
     _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
     if options["dry_run"]:
@@ -170,6 +174,15 @@ def del_titanium():
         subprocess.run(_cmd, stdout=_pipe)
         if len(dir_to_sync) > 0 and TITANIUM_BACK not in dir_to_sync:
             dir_to_sync.append(TITANIUM_BACK)
+
+
+def check_titanium_date():
+    titanium_dir = options["out_dir"] + TITANIUM_BACK
+    if not os.path.exists(titanium_dir):
+        return False
+    m_date = date.fromtimestamp(os.path.getmtime(titanium_dir))
+    today = date.today()
+    return m_date < today
 
 
 def adb_sync():
