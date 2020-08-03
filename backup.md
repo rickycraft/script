@@ -13,6 +13,8 @@ Backup your phone with custom options. Options _-o_ or _-e_ must be specified.
 | **-t**      | Update titanium.                                                    |
 | **-D**      | Enable debug                                                        |
 | **-i**      | Specify the device id                                               |
+| **-l**      | Backup only by folder                                               |
+| **-n**      | Dry run                                                             |
 
 ## Features to implement
 
