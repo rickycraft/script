@@ -32,6 +32,7 @@ options = {
     "junk": False,
     "device_id": "",
     "sync_dir": False,
+    "dry_run": False,
 }
 _pipe = DEVNULL
 
@@ -49,6 +50,7 @@ def create_parser():
     parser.add_argument("-i", help="Specify device id", metavar="DEVICE_ID")
     parser.add_argument("-D", help="Debug mode", action="store_true")
     parser.add_argument("-l", help="Sync by list dir", action="store_true")
+    parser.add_argument("-n", help="Dry run", action="store_true")
     return parser
 
 
@@ -122,17 +124,16 @@ def read_flags(arg: dict):
     options["junk"] = arg["c"]
     options["titanium"] = arg["t"]
     options["sync_dir"] = arg["l"]
+    options["dry_run"] = arg["n"]
     options["device_id"] = arg["i"] if arg["i"] else ""
 
 
 # read file w/ folder to sync
 def read_syncdir(arg: dict):
     if arg["f"]:
-
         with open(arg["f"], "r") as f:
             for line in f.readlines():
                 dir_to_sync.append(line.strip())
-
         print("Sync", dir_to_sync) if DEBUG else None
     else:
         print("Sync all dirs") if DEBUG else None
@@ -144,8 +145,12 @@ def adb_shell_rm(cmd: str):
     if len(cmd) < 2:
         return
     f = SDCARD + cmd
-    print("shell rm", f) if DEBUG else None
-    subprocess.run(["adb", "shell", "rm", "-rf", f], stdout=_pipe)
+    _cmd = ["adb", "shell", "rm", "-rf", f]
+    if options["dry_run"]:
+        print(" ".join(_cmd))
+    else:
+        print("shell rm", f) if DEBUG else None
+        subprocess.run(_cmd, stdout=_pipe)
 
 
 def del_junk():
@@ -155,12 +160,16 @@ def del_junk():
 
 
 def del_titanium():
-    if options["titanium"]:
-        print("Removing Titanium")
-        subprocess.run(["rm", "-rf", options["out_dir"] + TITANIUM_BACK], stdout=_pipe)
-        if len(dir_to_sync) > 0:
-            if not TITANIUM_BACK in dir_to_sync:
-                dir_to_sync.append(TITANIUM_BACK)
+    if not options["titanium"]:
+        return
+    print("Removing Titanium")
+    _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
+    if options["dry_run"]:
+        print(" ".join(_cmd))
+    else:
+        subprocess.run(_cmd, stdout=_pipe)
+        if len(dir_to_sync) > 0 and TITANIUM_BACK not in dir_to_sync:
+            dir_to_sync.append(TITANIUM_BACK)
 
 
 def adb_sync():
@@ -172,20 +181,34 @@ def adb_sync():
     cmd.append("-d") if options["delete"] else None
     # either some folder or all the sdcard
     if len(dir_to_sync) > 0:
-        for f in dir_to_sync:
-            _cmd = cmd.copy()
-            # trailing slash to open dir like rsync
-            _cmd.append(SDCARD + f + "/")
-            _cmd.append(options["out_dir"] + f)
+        adb_sync_folders(cmd)
+    else:
+        adb_sync_all(cmd)
+
+
+def adb_sync_all(cmd: list):
+    cmd.append(SDCARD + "/")
+    cmd.append(options["out_dir"])
+    if options["dry_run"]:
+        print(" ".join(cmd))
+    else:
+        print("running:", cmd) if DEBUG else print("Pulling", cmd[-2], "->", cmd[-1])
+        subprocess.run(cmd, stderr=DEVNULL, stdout=_pipe)
+
+
+def adb_sync_folders(cmd: list):
+    for f in dir_to_sync:
+        _cmd = cmd.copy()
+        # trailing slash to open dir like rsync
+        _cmd.append(SDCARD + f + "/")
+        _cmd.append(options["out_dir"] + f)
+        if options["dry_run"]:
+            print(" ".join(_cmd))
+        else:
             print("running:", _cmd) if DEBUG else print(
                 "Pulling", _cmd[-2], "->", _cmd[-1]
             )
             subprocess.run(_cmd, stderr=DEVNULL, stdout=_pipe)
-    else:
-        cmd.append(SDCARD + "/")
-        cmd.append(options["out_dir"])
-        print("running:", cmd) if DEBUG else print("Pulling", cmd[-2], "->", cmd[-1])
-        subprocess.run(cmd, stderr=DEVNULL, stdout=_pipe)
 
 
 def folder_list():
