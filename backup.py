@@ -67,7 +67,7 @@ def parse_args():
         _pipe = None
     # check that at leas one output is valid
     if not (arg["e"] ^ bool(arg["o"])):
-        sys.stderr.write("Both -o and -e specified or none")
+        sys.stderr.write("Both -o and -e specified or none\n")
         exit(EXIT_ERROR)
     # read all arguments
     read_destination(arg)
@@ -114,7 +114,7 @@ def read_destination(arg: dict):
             sys.stderr.write("path does not exist\n")
             exit(EXIT_ERROR)
     else:
-        sys.stderr.write("File path error")
+        sys.stderr.write("File path error\n")
         exit(EXIT_ERROR)
 
 
@@ -154,13 +154,13 @@ def adb_shell_rm(cmd: str):
 
 
 def del_junk():
-    if options["junk"]:
+    if options["junk"] and not options["dry_run"]:
         for f in JUNK_FILES:
             adb_shell_rm(f)
 
 
 def del_titanium():
-    if not options["titanium"]:
+    if (not options["titanium"]) or options["dry_run"]:
         return
     print("Removing Titanium")
     _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
@@ -173,9 +173,9 @@ def del_titanium():
 
 
 def adb_sync():
+    folder_list()
     del_junk()
     del_titanium()
-    folder_list()
     # create command
     cmd = ["adb-sync", "-R", "-t"]
     cmd.append("-d") if options["delete"] else None
