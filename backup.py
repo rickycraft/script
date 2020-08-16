@@ -17,16 +17,16 @@ JUNK_FILES = [
     "/Movies/.thumbnails",
 ]
 BLACKLIST_DIR = [
-    "mipush",
-    "beam",
     "amap",
-    "Tencent",
-    "data",
+    "android",
     "backups",
-    "Ringtones",
-    "Notifications",
-    "Telegram",
-    "android"
+    "beam",
+    "data",
+    "mipush",
+    "notifications",
+    "ringtones",
+    "telegram",
+    "tencent",
 ]
 SDCARD = "/sdcard"
 TITANIUM_BACK = "/TitaniumBackup"
@@ -168,7 +168,7 @@ def del_junk():
 
 def del_titanium():
     if check_titanium_date() or options["titanium"]:
-        
+
         _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
         if options["dry_run"]:
             print(" ".join(_cmd))
@@ -238,7 +238,7 @@ def folder_list():
         .split("\n")
     )
     for f in out:
-        if f not in BLACKLIST_DIR:
+        if f.lower() not in BLACKLIST_DIR:
             dir_to_sync.append("/" + f)
 
 
