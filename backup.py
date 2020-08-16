@@ -26,6 +26,7 @@ BLACKLIST_DIR = [
     "Ringtones",
     "Notifications",
     "Telegram",
+    "android"
 ]
 SDCARD = "/sdcard"
 TITANIUM_BACK = "/TitaniumBackup"
