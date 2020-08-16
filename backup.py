@@ -52,7 +52,7 @@ def create_parser():
     parser.add_argument(
         "-e", help="Get from env outdir (ADB_SYNC_DEST)", action="store_true"
     )
-    parser.add_argument("-c", help="Clean junk files", action="store_true")
+    parser.add_argument("-j", help="Clean junk files", action="store_true")
     parser.add_argument("-t", help="Update titanium", action="store_true")
     parser.add_argument("-i", help="Specify device id", metavar="DEVICE_ID")
     parser.add_argument("-D", help="Debug mode", action="store_true")

@@ -9,7 +9,7 @@ Backup your phone with custom options. Options _-o_ or _-e_ must be specified.
 | **-f FILE** | Only sync folder in FILE. One each line.                            |
 | **-o OUT**  | Dest directory set to OUT. Exclusive with -e.                       |
 | **-e**      | Dest directory from environment (ADB_SYNC_DEST). Exclusive with -o. |
-| **-c**      | Clean clutter files.                                                |
+| **-j**      | Clean clutter files.                                                |
 | **-t**      | Update titanium.                                                    |
 | **-D**      | Enable debug                                                        |
 | **-i**      | Specify the device id                                               |
