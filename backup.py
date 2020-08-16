@@ -21,6 +21,11 @@ BLACKLIST_DIR = [
     "beam",
     "amap",
     "Tencent",
+    "data",
+    "backups",
+    "Ringtones",
+    "Notifications",
+    "Telegram",
 ]
 SDCARD = "/sdcard"
 TITANIUM_BACK = "/TitaniumBackup"
@@ -155,25 +160,22 @@ def adb_shell_rm(cmd: str):
 
 
 def del_junk():
-    if options["junk"] and not options["dry_run"]:
+    if options["junk"]:
         for f in JUNK_FILES:
             adb_shell_rm(f)
 
 
 def del_titanium():
-    if options["dry_run"]:
-        return
-    if not (check_titanium_date() or options["titanium"]):
-        return
-
-    print("Removing Titanium")
-    _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
-    if options["dry_run"]:
-        print(" ".join(_cmd))
-    else:
-        subprocess.run(_cmd, stdout=_pipe)
-        if len(dir_to_sync) > 0 and TITANIUM_BACK not in dir_to_sync:
-            dir_to_sync.append(TITANIUM_BACK)
+    if check_titanium_date() or options["titanium"]:
+        
+        _cmd = ["rm", "-rf", options["out_dir"] + TITANIUM_BACK]
+        if options["dry_run"]:
+            print(" ".join(_cmd))
+        else:
+            print("Removing Titanium")
+            subprocess.run(_cmd, stdout=_pipe)
+            if len(dir_to_sync) > 0 and TITANIUM_BACK not in dir_to_sync:
+                dir_to_sync.append(TITANIUM_BACK)
 
 
 def check_titanium_date():
