@@ -10,8 +10,6 @@ from datetime import date
 
 EXIT_ERROR = 0
 JUNK_FILES = [
-    "/Android",
-    "/data",
     "/DCIM/.thumbnails",
     "/Pictures/.thumbnails",
     "/Movies/.thumbnails",
