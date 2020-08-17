@@ -8,7 +8,7 @@ from subprocess import PIPE, DEVNULL, STDOUT
 from datetime import date
 
 
-EXIT_ERROR = 0
+EXIT_ERROR = 1
 JUNK_FILES = [
     "/DCIM/.thumbnails",
     "/Pictures/.thumbnails",
