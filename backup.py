@@ -76,25 +76,7 @@ class Backup:
         self.read_flags()
         self.read_syncdir()
 
-        print("Parsed Arg:", self) if self.debug else None
-
-    # check if a device is connected
-    def check_device(self):
-        subprocess.run(["adb", "start-server"], stdout=DEVNULL, stderr=DEVNULL)
-        out = subprocess.run(
-            ["adb", "get-serialno"],
-            stdout=PIPE,
-            stderr=DEVNULL,
-            universal_newlines=True,
-        ).stdout.strip()
-
-        if out != "":
-            if self.device_id != "":
-                return self.device_id in out
-            else:
-                return True
-        else:
-            return False
+        print("Parsed Arg:", vars(self)) if self.debug else None
 
     # read output destination folder
     def read_destination(self):
@@ -139,6 +121,24 @@ class Backup:
         else:
             print("Sync all dirs") if self.debug else None
 
+    # check if a device is connected
+    def check_device(self):
+        subprocess.run(["adb", "start-server"], stdout=DEVNULL, stderr=DEVNULL)
+        out = subprocess.run(
+            ["adb", "get-serialno"],
+            stdout=PIPE,
+            stderr=DEVNULL,
+            universal_newlines=True,
+        ).stdout.strip()
+
+        if out != "":
+            if self.device_id != "":
+                return self.device_id in out
+            else:
+                return True
+        else:
+            return False
+
     # remove folder/file from device
     def adb_shell_rm(self, cmd: str):
         # check that is somewhat valid
@@ -175,6 +175,20 @@ class Backup:
         m_date = date.fromtimestamp(os.path.getmtime(titanium_dir))
         today = date.today()
         return m_date < today
+
+    def folder_list(self):
+        if not self.sync_dir:
+            return
+
+        cmd = ["adb", "shell", "ls", "/sdcard"]
+        out = (
+            subprocess.run(cmd, stderr=DEVNULL, stdout=PIPE, universal_newlines=True)
+            .stdout.strip()
+            .split("\n")
+        )
+        for f in out:
+            if f.lower() not in BLACKLIST_DIR:
+                self.dir_to_sync.append("/" + f)
 
     def adb_sync(self):
         self.folder_list()
@@ -214,20 +228,6 @@ class Backup:
                 )
                 subprocess.run(_cmd, stderr=DEVNULL, stdout=self.pipe)
 
-    def folder_list(self):
-        if not self.sync_dir:
-            return
-
-        cmd = ["adb", "shell", "ls", "/sdcard"]
-        out = (
-            subprocess.run(cmd, stderr=DEVNULL, stdout=PIPE, universal_newlines=True)
-            .stdout.strip()
-            .split("\n")
-        )
-        for f in out:
-            if f.lower() not in BLACKLIST_DIR:
-                self.dir_to_sync.append("/" + f)
-
     def __init__(self):
         self.parse_args()
 
@@ -237,7 +237,7 @@ if __name__ == "__main__":
         backup = Backup()
         if not backup.check_device():
             sys.stderr.write("No device connected\n")
-            # sys.exit(EXIT_ERROR)
+            sys.exit(EXIT_ERROR)
         print("#" * 20) if backup.debug else None
         backup.adb_sync()
     except KeyboardInterrupt:
