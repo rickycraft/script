@@ -49,9 +49,7 @@ class Backup:
         parser.add_argument("-d", help="Delete file on dest", action="store_true")
         parser.add_argument("-f", help="Dirs file", metavar="FILE")
         parser.add_argument("-o", help="Outdir", metavar="OUT")
-        parser.add_argument(
-            "-e", help="Get from env outdir (ADB_SYNC_DEST)", action="store_true"
-        )
+        parser.add_argument("-e", help="Get from env outdir (ADB_SYNC_DEST)", action="store_true")
         parser.add_argument("-j", help="Clean junk files", action="store_true")
         parser.add_argument("-t", help="Update titanium", action="store_true")
         parser.add_argument("-i", help="Specify device id", metavar="DEVICE_ID")
@@ -125,7 +123,7 @@ class Backup:
     # read option from the passed arguments
     def read_flags(self):
         self.delete = self.arg["d"]
-        self.junk = self.arg["c"]
+        self.junk = self.arg["j"]
         self.titanium = self.arg["t"]
         self.sync_dir = self.arg["l"]
         self.dry_run = self.arg["n"]
