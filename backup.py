@@ -126,7 +126,7 @@ def read_destination(arg: dict):
 # read option from the passed arguments
 def read_flags(arg: dict):
     options["delete"] = arg["d"]
-    options["junk"] = arg["c"]
+    options["junk"] = arg["j"]
     options["titanium"] = arg["t"]
     options["sync_dir"] = arg["l"]
     options["dry_run"] = arg["n"]
