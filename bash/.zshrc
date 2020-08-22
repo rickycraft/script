@@ -1,4 +1,4 @@
-#Personal preferences
+# Personal preferences
 unsetopt correct_all # spelling correction for arguments
 setopt correct # spelling correction for commands
 setopt complete_in_word # Allow completion from within a word/phrase
@@ -17,48 +17,34 @@ setopt complete_aliases
 setopt auto_list
 setopt no_beep # don't beep on error
 
-#alias
-alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
+# Aliases
 alias poweroff='sudo shutdown -h now'
 alias rsync='rsync -avzhP'
-alias cask='brew cask'
+# alias cask='brew cask'
+# alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
-plugins=(brew osx extract web-search sudo adb fzf zsh-autosuggestions)
+plugins=(sudo adb fzf zsh-autosuggestions)
 
-ZSH_THEME="riccardo"
+# Exports
+export REPORTTIME=10
+export GIT_HOME_DIR="~/Git/"
+export LANG=en_US.UTF-8
+export MANPATH="/usr/local/man:$MANPATH"
 
-#my new path
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/opt/X11/bin:/usr/local/bin/my
+# PATH
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
+export ZSH_THEME="riccardo"
 
-# MacOS Libraries
-export SDKROOT=macosx10.14
-
-#exports
-export EDITOR="/usr/bin/nano"
-export REPORTTIME=10
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-export GIT_HOME_DIR="~/Git/"
-
-# User configuration
-export MANPATH="/usr/local/man:$MANPATH"
-
-#fzf
+# Fzf
 export FZF_BASE=$(which fzf)
 
 # Uncomment the following line to disable fuzzy completion
 # export DISABLE_FZF_AUTO_COMPLETION="true"
-
 # Uncomment the following line to disable key bindings (CTRL-T, CTRL-R, ALT-C)
 # export DISABLE_FZF_KEY_BINDINGS="true"
-
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
-
-# ssh
-export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 source $ZSH/oh-my-zsh.sh
 
