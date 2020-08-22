@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "Stopping homeassistant"
+ha core stop 1> /dev/null
+
+echo "Killing addon containers"
+docker container kill $(docker ps -q -f name=addon_* ) 2> /dev/null
+
+echo "Stopping supervisor"
+systemctl stop hassio-apparmor
+systemctl stop hassio-supervisor
+
+echo "Killing hassio containers"
+docker container kill $(docker ps -q -f name=hassio_* ) 2> /dev/null
+
+echo "Done"

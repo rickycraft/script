@@ -1,0 +1,15 @@
+#!/bin/sh
+
+BACKUP_DIR=/tmp
+BACKUP_NAME=$(date +%F).hassio.zip
+REMOTE_DIR=/volume1/rick/hassio_backups
+
+echo "Creating ZIP"
+cd /home
+zip -8 -qrn ".tar" "$BACKUP_DIR/$BACKUP_NAME" hassio -x "*.sock"
+
+echo "Copy to remote location"
+scp "$BACKUP_DIR/$BACKUP_NAME" "rick@192.168.1.150:$REMOTE_DIR" 2> /dev/null
+
+# Remove created zip file
+rm "$BACKUP_DIR/$BACKUP_NAME"
