@@ -1,0 +1,31 @@
+#!/bin/sh
+###
+# Backing up core
+###
+CORE_DIR="/home/hassio/backup"
+
+CORE_VERSION=$(ha core info | grep last_version | awk -F ': ' '{print $2}')
+echo "Homeassistant version $CORE_VERSION"
+
+CORE_BACKUP_NAME=$(date +%F)
+CORE_BACKUP_CODE=$(ha snap new --name $CORE_BACKUP_NAME | awk -F ': ' '{print $2}')
+echo "Backup name $CORE_BACKUP_NAME" 
+echo "Backup code $CORE_BACKUP_CODE"
+####
+# Backing up hassio
+####
+BACKUP_DIR="/tmp"
+BACKUP_NAME=$(date +%F).hassio.zip
+REMOTE_DIR=/volume1/rick/hassio_backups
+
+echo "Creating ZIP"
+cd /home
+zip -8 -qrn ".tar" "$BACKUP_DIR/$BACKUP_NAME" hassio -x "*.sock"
+
+echo "Copy to remote location"
+scp "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.150:$REMOTE_DIR" 2> /dev/null
+
+# Remove created zip file
+rm "$BACKUP_DIR/$BACKUP_NAME"
+# Remove created backup
+ha snap rm $CORE_BACKUP_CODE 1> /dev/null
