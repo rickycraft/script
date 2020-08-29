@@ -1,0 +1,12 @@
+#!/bin/bash
+
+WORDPRESS_DIR=/root/wordpress
+DOCKER_PS=$( docker ps | grep wordpress | awk '{print $11}' )
+
+if [[ $DOCKER_PS == "wordpress" ]]; then
+	echo "Stopping wordpress"
+	cd $WORDPRESS_DIR
+	docker-compose down
+else
+	echo "Wordpress is down"
+fi
