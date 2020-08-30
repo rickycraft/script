@@ -24,15 +24,19 @@ alias rsync='rsync -avzhP'
 # alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
 plugins=(sudo adb fzf zsh-autosuggestions)
+# plugins=(brew osx sudo adb fzf zsh-autosuggestions)
 
 # Exports
-export REPORTTIME=10
 export GIT_HOME_DIR="~/Git/"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
+# export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus"
+# export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+# export SDKROOT=macosx10.14
 
 # PATH
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+export PATH=$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
@@ -47,5 +51,4 @@ export FZF_BASE=$(which fzf)
 # export DISABLE_FZF_KEY_BINDINGS="true"
 
 source $ZSH/oh-my-zsh.sh
-
 autoload -Uz compinit && compinit
