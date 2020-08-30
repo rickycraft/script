@@ -220,7 +220,7 @@ class Backup:
             # trailing slash to open dir like rsync
             _cmd.append(SDCARD + f + "/")
             _cmd.append(self.out_dir + f)
-            if self.out_dir:
+            if self.dry_run:
                 print(" ".join(_cmd))
             else:
                 print("running:", _cmd) if self.debug else print(
