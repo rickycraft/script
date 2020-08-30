@@ -30,6 +30,7 @@ plugins=(sudo adb fzf zsh-autosuggestions)
 export GIT_HOME_DIR="~/Git/"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
+export EDITOR=$(which vim)
 # export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus"
 # export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 # export SDKROOT=macosx10.14
