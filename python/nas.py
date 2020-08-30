@@ -21,26 +21,26 @@ class Options:
     def __init__(self, dry_run, quiet):
         self.dry_run = dry_run
         self.quiet = quiet
+        self.check_path()
 
+    def sync(self):
+        cmd = "rsync -ahzP %s %s"
+        _pipe = subprocess.DEVNULL if self.quiet else None
 
-def sync(opt: Options):
-    cmd = "rsync -ahzP %s %s"
-    _pipe = subprocess.DEVNULL if opt.quiet else None
-    for f in opt.sync_folder:
-        _cmd = cmd % (opt.source + f, opt.dest + f)
-        print(_cmd)
-        if not opt.dry_run:
-            subprocess.run(_cmd, shell=True, stdout=_pipe, stderr=_pipe)
+        for f in self.sync_folder:
+            _cmd = cmd % (self.source + f, self.dest + f)
+            None if self.quiet else print(_cmd)
+            if not self.dry_run:
+                subprocess.run(_cmd, shell=True, stdout=_pipe, stderr=_pipe)
 
+    def check_path(self):
+        if not path.exists(self.source):
+            print("Invalid source path")
+            exit(1)
 
-def check_path(opt: Options):
-    if not path.exists(opt.source):
-        print("Invalid source path")
-        exit(1)
-
-    if not path.exists(opt.dest):
-        print("Invalid dest path")
-        exit(1)
+        if not path.exists(self.dest):
+            print("Invalid dest path")
+            exit(1)
 
 
 def create_parser():
@@ -58,4 +58,4 @@ def parse_arguments():
 
 if __name__ == "__main__":
     opt = parse_arguments()
-    sync(opt)
+    opt.sync()

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# -d delete | -e env | -j junk | -l list | -i device_id
+cd ~/Git/script/python/
+./backup.py -dejl -i 29d3c130 $1
+./nas.py $1
