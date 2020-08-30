@@ -1,6 +1,8 @@
-# script
-my personal script
+# Script
+Repo with my personal scripts.
 
-## external libraries
-
+## External libraries
 [adb-sync](https://github.com/google/adb-sync)
+
+## Todo
+- Better readme
