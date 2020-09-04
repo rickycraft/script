@@ -23,8 +23,8 @@ alias rsync='rsync -avzhP'
 # alias cask='brew cask'
 # alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
-plugins=(sudo adb fzf zsh-autosuggestions)
-# plugins=(brew osx sudo adb fzf zsh-autosuggestions)
+plugins=(sudo adb zsh-autosuggestions)
+# plugins=(brew osx sudo adb zsh-autosuggestions)
 
 # Exports
 export GIT_HOME_DIR="~/Git/"
@@ -44,14 +44,6 @@ export PATH=$PATH
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 export ZSH_THEME="riccardo"
-
-# Fzf
-export FZF_BASE=$(which fzf)
-
-# Uncomment the following line to disable fuzzy completion
-# export DISABLE_FZF_AUTO_COMPLETION="true"
-# Uncomment the following line to disable key bindings (CTRL-T, CTRL-R, ALT-C)
-# export DISABLE_FZF_KEY_BINDINGS="true"
 
 source $ZSH/oh-my-zsh.sh
 autoload -Uz compinit && compinit
