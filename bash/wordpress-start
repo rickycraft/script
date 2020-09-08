@@ -8,7 +8,7 @@ if [[ $DOCKER_PS == "wordpress" ]]; then
 else
 	echo "Starting wordpress"
 	cd $WORDPRESS_DIR
-	docker-compose up -d
+	docker-compose up -d &> /dev/null &
 fi
 
 
