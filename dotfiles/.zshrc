@@ -27,7 +27,7 @@ plugins=(sudo adb zsh-autosuggestions)
 # plugins=(brew osx sudo adb zsh-autosuggestions)
 
 # Exports
-export GIT_HOME_DIR="~/Git/"
+# export GIT_HOME_DIR="~/Git/"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
 export EDITOR=$(which vim)
@@ -45,6 +45,7 @@ export PATH=$PATH
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 export ZSH_THEME="powerlevel10k/powerlevel10k"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
 
 source $ZSH/oh-my-zsh.sh
 autoload -Uz compinit && compinit
