@@ -33,6 +33,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 export EDITOR=$(which vim)
 export HOSTNAME=$(cat /etc/hostname)
 export TERM=xterm-256color
+export SCRIPT=
 # export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus"
 # export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 # export SDKROOT=macosx10.14
