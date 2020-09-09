@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # -d delete | -e env | -j junk | -l list | -i device_id
-./backup.py -dejl -i 29d3c130 $1
+./backup -dejl -i 29d3c130 $1
 echo '#########'
-./nas.py $1
+./nas $1
+
