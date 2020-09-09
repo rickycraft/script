@@ -23,9 +23,6 @@ alias rsync='rsync -avzhP'
 # alias cask='brew cask'
 # alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
-plugins=(sudo adb zsh-autosuggestions)
-# plugins=(brew osx sudo adb zsh-autosuggestions)
-
 # Exports
 # export GIT_HOME_DIR="~/Git/"
 export LANG=en_US.UTF-8
@@ -41,6 +38,9 @@ export SCRIPT=
 # PATH
 PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH=$PATH
+
+plugins=(sudo adb zsh-autosuggestions)
+# plugins=(brew osx sudo adb zsh-autosuggestions)
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
