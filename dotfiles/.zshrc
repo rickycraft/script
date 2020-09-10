@@ -16,6 +16,7 @@ setopt hup
 setopt complete_aliases
 setopt auto_list
 setopt no_beep # don't beep on error
+export HISTFILE=~/.zsh_history
 
 # Aliases
 alias poweroff='sudo shutdown -h now'
@@ -24,13 +25,13 @@ alias rsync='rsync -avzhP'
 # alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
 # Exports
-# export GIT_HOME_DIR="~/Git/"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
 export EDITOR=$(which vim)
 export HOSTNAME=$(cat /etc/hostname)
 export TERM=xterm-256color
-export SCRIPT=
+export SCRIPT=$HOME/Git/script
+# export GIT_HOME_DIR="~/Git/"
 # export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus"
 # export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 # export SDKROOT=macosx10.14
@@ -39,16 +40,16 @@ export SCRIPT=
 PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH=$PATH
 
-plugins=(sudo adb zsh-autosuggestions)
-# plugins=(brew osx sudo adb zsh-autosuggestions)
-
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-export ZSH_THEME="powerlevel10k/powerlevel10k"
+# Plugin
+export ZSH_PLUGIN=~/.zsh-plugins
+source $ZSH_PLUGIN/sudo/sudo.plugin.zsh
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
+source $ZSH_PLUGIN/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-source $ZSH/oh-my-zsh.sh
-autoload -Uz compinit && compinit
+# Powerlevel10k
+source $ZSH_PLUGIN/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+autoload -Uz compinit && compinit
