@@ -1,30 +1,33 @@
 #!/bin/sh
 
-# Script git dir
-SCRIPT_GIT=$(find $HOME -type d -name '.git' -maxdepth 3 | grep script)
-SCRIPT=${SCRIPT_GIT:0:-5}
-echo export SCRIPT=$SCRIPT >> $ZSH_ENV
-
-cd $SCRIPT/dotfiles
-cp .* $HOME
-
 # PLUGINS
 ZSH_PLUGINS=$HOME/.zsh-plugins
 ZSH_ENV=$ZSH_PLUGINS/env.zsh
+rm -rf $ZSH_PLUGINS
 mkdir $ZSH_PLUGINS
+
+# Script git dir
+SCRIPT=$(find $HOME -type d -name '.git' -maxdepth 3 | grep script | awk '{print substr($0,0,length($0)-5)}')
+echo export SCRIPT=$SCRIPT > $ZSH_ENV
+
+cd $SCRIPT/dotfiles
+cp .* $HOME 2> /dev/null
 
 # Vim path
 VIM_PATH=$(which vim)
 echo export EDITOR=$VIM_PATH >> $ZSH_ENV
 
 # Clone oh-my-zsh
-git clone --depth=1 git@github.com:ohmyzsh/ohmyzsh.git /tmp/ohmyzsh
+echo 'oh-my-zsh'
+rm -rf /tmp/ohmyzsh
+git clone -q --depth=1 git@github.com:ohmyzsh/ohmyzsh.git /tmp/ohmyzsh
 OHMYZSH=/tmp/ohmyzsh/plugins
 # Copy plugins
 mv $OHMYZSH/sudo $ZSH_PLUGINS
 
 # POWERLEVEL10K
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_PLUGINS/powerlevel10k
+echo "p10k"
+git clone -q --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_PLUGINS/powerlevel10k
 # Remove git icon
 cd $ZSH_PLUGINS/powerlevel10k/internal
 GIT_ICON_LINE=$(grep 'function _p9k_vcs_icon() {' p10k.zsh -n | awk -F ':' '{print $1}')
@@ -32,25 +35,23 @@ START_LINE=$(( $GIT_ICON_LINE + 1))
 END_LINE=$(( $START_LINE + 6))
 mv p10k.zsh p10k.zsh.tmp
 sed $START_LINE','$END_LINE'd' p10k.zsh.tmp > p10k.zsh
-cd $HOME
 
 # ZSH-AUTOSUGGESTIONS
-git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_PLUGINS/zsh-autosuggestions
+echo 'zsh-autosuggestions'
+git clone -q --depth=1 https://github.com/zsh-users/zsh-autosuggestions $ZSH_PLUGINS/zsh-autosuggestions
 
 if [ "${OSTYPE:0:6}"="darwin" ]; then
-    OSX=$ZSH_PLUGINS/darwin.zsh
-    
+    echo "darwin"
+    cp $SCRIPT/dotfiles/darwin.zsh $ZSH_PLUGINS
+
     mv $OHMYZSH/osx $ZSH_PLUGINS
-    source $ZSH_PLUGINS/osx/osx.plugin.zsh
+    cd $ZSH_PLUGINS/osx
+    cp osx.plugin.zsh /tmp/osx.plugin.zsh
+    sed '/compdef/d' /tmp/osx.plugin.zsh > osx.plugin.zsh
+    cp music /tmp/music
+    sed '/compdef/d' /tmp/music > music
 
-    echo alias cask='brew cask' >> $OSX
-    echo alias bupdate='bubo && cask upgrade $(cask list) &&  bubc' >> $OSX
-
-    echo export GIT_HOME_DIR=$HOME/Git >> $OSX
-    echo export SCRIPT=$HOME/Git/script >> $OSX
-    echo export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus" >> $OSX
-    echo export HOMEBREW_CASK_OPTS="--appdir=/Applications" >> $OSX
-    echo export SDKROOT=macosx10.14 >> $OSX
+    mv $OHMYZSH/brew $ZSH_PLUGINS
 fi
 
-zsh
+echo 'complete'
