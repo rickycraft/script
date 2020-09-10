@@ -16,40 +16,43 @@ setopt hup
 setopt complete_aliases
 setopt auto_list
 setopt no_beep # don't beep on error
-export HISTFILE=~/.zsh_history
+export HISTFILE=$HOME/.zsh_history
 
 # Aliases
 alias poweroff='sudo shutdown -h now'
 alias rsync='rsync -avzhP'
-# alias cask='brew cask'
-# alias bupdate='bubo && cask upgrade $(cask list) &&  bubc'
 
 # Exports
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
-export EDITOR=$(which vim)
-export HOSTNAME=$(cat /etc/hostname)
 export TERM=xterm-256color
-export SCRIPT=$HOME/Git/script
-# export GIT_HOME_DIR="~/Git/"
-# export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus"
-# export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-# export SDKROOT=macosx10.14
+export ZSH_PLUGINS=$HOME/.zsh-plugins
 
 # PATH
-PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-export PATH=$PATH
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-# Plugin
-export ZSH_PLUGIN=~/.zsh-plugins
-source $ZSH_PLUGIN/sudo/sudo.plugin.zsh
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
-source $ZSH_PLUGIN/zsh-autosuggestions/zsh-autosuggestions.zsh
+# MacOS
+if [ "${OSTYPE:0:6}"="darwin" ]; then
+    source $ZSH_PLUGINS/darwin.zsh
+    export PATH=$PATH:$SCRIPT/mac
+else
+    export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
+    export PATH=$PATH:$SCRIPT/bash
+fi
 
-# Powerlevel10k
-source $ZSH_PLUGIN/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# env
+source $ZSH_PLUGINS/env.zsh
+# sudo
+source $ZSH_PLUGINS/sudo/sudo.plugin.zsh
+# zsh-autosuggestions
+source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+# powerlevel10k
+source $ZSH_PLUGINS/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-autoload -Uz compinit && compinit
+# compdump once a day
+autoload -Uz compinit 
+if [[ -n $HOME/.zcompdump(#qN.mh+24) ]]; then
+	compinit
+else
+	compinit -C
+fi

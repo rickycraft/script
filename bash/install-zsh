@@ -1,18 +1,32 @@
 #!/bin/sh
 
-chsh -s $(which zsh)
+# Script git dir
+SCRIPT_GIT=$(find $HOME -type d -name '.git' -maxdepth 3 | grep script)
+SCRIPT=${SCRIPT_GIT:0:-5}
+echo export SCRIPT=$SCRIPT >> $ZSH_ENV
 
-cd ../dotfiles
+cd $SCRIPT/dotfiles
 cp .* $HOME
 
 # PLUGINS
-export ZSH_PLUGINS=~/.zsh-plugins
+ZSH_PLUGINS=$HOME/.zsh-plugins
+ZSH_ENV=$ZSH_PLUGINS/env.zsh
 mkdir $ZSH_PLUGINS
+
+# Vim path
+VIM_PATH=$(which vim)
+echo export EDITOR=$VIM_PATH >> $ZSH_ENV
+
+# Clone oh-my-zsh
+git clone --depth=1 git@github.com:ohmyzsh/ohmyzsh.git /tmp/ohmyzsh
+OHMYZSH=/tmp/ohmyzsh/plugins
+# Copy plugins
+mv $OHMYZSH/sudo $ZSH_PLUGINS
 
 # POWERLEVEL10K
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_PLUGINS/powerlevel10k
 # Remove git icon
-cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k/internal
+cd $ZSH_PLUGINS/powerlevel10k/internal
 GIT_ICON_LINE=$(grep 'function _p9k_vcs_icon() {' p10k.zsh -n | awk -F ':' '{print $1}')
 START_LINE=$(( $GIT_ICON_LINE + 1))
 END_LINE=$(( $START_LINE + 6))
@@ -23,8 +37,20 @@ cd $HOME
 # ZSH-AUTOSUGGESTIONS
 git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_PLUGINS/zsh-autosuggestions
 
-# SUDO
-mkdir $ZSH_PLUGINS/sudo
-curl -s https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh -o $ZSH_PLUGINS/sudo/sudo.plugin.zsh
+if [ "${OSTYPE:0:6}"="darwin" ]; then
+    OSX=$ZSH_PLUGINS/darwin.zsh
+    
+    mv $OHMYZSH/osx $ZSH_PLUGINS
+    source $ZSH_PLUGINS/osx/osx.plugin.zsh
+
+    echo alias cask='brew cask' >> $OSX
+    echo alias bupdate='bubo && cask upgrade $(cask list) &&  bubc' >> $OSX
+
+    echo export GIT_HOME_DIR=$HOME/Git >> $OSX
+    echo export SCRIPT=$HOME/Git/script >> $OSX
+    echo export ADB_SYNC_DEST="/Volumes/CROCCANTE/OnePlus" >> $OSX
+    echo export HOMEBREW_CASK_OPTS="--appdir=/Applications" >> $OSX
+    echo export SDKROOT=macosx10.14 >> $OSX
+fi
 
 zsh
