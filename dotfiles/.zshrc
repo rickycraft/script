@@ -34,7 +34,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 # MacOS
 if [ "${OSTYPE:0:6}"="darwin" ]; then
     source $ZSH_PLUGINS/darwin.zsh
-    export PATH=$PATH:$SCRIPT/mac
+    export PATH=$PATH:/usr/local/bin/my:$SCRIPT/mac
 else
     export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
     export PATH=$PATH:$SCRIPT/bash
