@@ -1,7 +1,7 @@
 # Mac zsh config
 
 alias cask='brew cask'
-alias bupdate='brew update && brew upgrade && cask upgrade $(cask list) &&  bubc'
+alias bupdate='bubo && brew upgrade --cask $(brew list --cask) &&  bubc'
 
 export GIT_HOME_DIR=$HOME/Git
 export SCRIPT=$HOME/Git/script
