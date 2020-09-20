@@ -16,9 +16,8 @@ setopt hup
 setopt complete_aliases
 setopt auto_list
 setopt no_beep # don't beep on error
-export SAVEHIST=1000000
-export HISTFILESIZE=1000000
-export HISTSIZE=1000000
+export SAVEHIST=10000
+export HISTSIZE=50000
 export HISTFILE=$HOME/.zsh_history
 
 # Aliases
