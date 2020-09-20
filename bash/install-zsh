@@ -7,7 +7,7 @@ rm -rf $ZSH_PLUGINS
 mkdir $ZSH_PLUGINS
 
 # Script git dir
-SCRIPT=$(find $HOME -type d -name '.git' -maxdepth 3 | grep script | awk '{print substr($0,0,length($0)-5)}')
+SCRIPT=$(find $HOME -maxdepth 3 -type d -name '.git' | grep script | awk '{print substr($0,0,length($0)-4)}')
 echo export SCRIPT=$SCRIPT > $ZSH_ENV
 
 cd $SCRIPT/dotfiles
