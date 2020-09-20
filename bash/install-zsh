@@ -40,7 +40,7 @@ sed $START_LINE','$END_LINE'd' p10k.zsh.tmp > p10k.zsh
 echo 'zsh-autosuggestions'
 git clone -q --depth=1 https://github.com/zsh-users/zsh-autosuggestions $ZSH_PLUGINS/zsh-autosuggestions
 
-if [ "${OSTYPE:0:6}"="darwin" ]; then
+if [ "$(uname)"=="Darwin" ]; then
     echo "darwin"
     cp $SCRIPT/dotfiles/darwin.zsh $ZSH_PLUGINS
 
