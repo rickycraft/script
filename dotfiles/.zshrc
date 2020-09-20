@@ -32,7 +32,8 @@ export ZSH_PLUGINS=$HOME/.zsh-plugins
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 # MacOS
-if [ "${OSTYPE:0:6}"="darwin" ]; then
+if [[ "$(uname)" == "Darwin" ]]; then
+    echo "Darwin"
     source $ZSH_PLUGINS/darwin.zsh
     export PATH=$PATH:/usr/local/bin/my:$SCRIPT/mac
 else
