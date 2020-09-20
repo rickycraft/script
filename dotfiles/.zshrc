@@ -28,6 +28,9 @@ export MANPATH="/usr/local/man:$MANPATH"
 export TERM=xterm-256color
 export ZSH_PLUGINS=$HOME/.zsh-plugins
 
+# env
+source $ZSH_PLUGINS/env.zsh
+
 # PATH
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
@@ -41,8 +44,6 @@ else
     export PATH=$PATH:$SCRIPT/bash
 fi
 
-# env
-source $ZSH_PLUGINS/env.zsh
 # sudo
 source $ZSH_PLUGINS/sudo/sudo.plugin.zsh
 # zsh-autosuggestions
