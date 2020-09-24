@@ -1,4 +1,4 @@
 #!/bin/sh
 
 hassio-stop
-reboot -r now
+shutdown -r now
