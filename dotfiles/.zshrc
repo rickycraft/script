@@ -35,6 +35,7 @@ source $ZSH_PLUGINS/env.zsh
 
 # PATH
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+PATH=$PATH:$SCRIPT/python
 
 # MacOS
 if [[ "$(uname)" == "Darwin" ]]; then
