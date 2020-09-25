@@ -1,6 +1,8 @@
 #!/bin/sh
 
+echo '######### ANDROID BACKUP #########'
 # -d delete | -e env | -j junk | -l list | -i device_id
 android-backup -dejl -i 29d3c130 $1
-echo '#########'
+echo '########### NAS BACKUP ###########'
 nas-backup $1
+echo '############## END ##############'

@@ -15,22 +15,27 @@ class Options:
         "Pictures/",
         "TitaniumBackup/",
     ]
-    dry_run = True
-    quiet = False
+    dry_run = False
+    debug = False
 
-    def __init__(self, dry_run, quiet):
+    def __init__(self, dry_run, debug):
         self.dry_run = dry_run
-        self.quiet = quiet
+        self.debug = debug
         self.check_path()
 
     def sync(self):
-        cmd = "rsync -ahzP %s %s"
-        _pipe = subprocess.DEVNULL if self.quiet else None
+        cmd = "rsync3 -ahz --info=progress2 %s %s"
+        # _pipe = None if self.debug else subprocess.DEVNULL
+        _pipe = None
 
         for f in self.sync_folder:
             _cmd = cmd % (self.source + f, self.dest + f)
-            None if self.quiet else print(_cmd)
-            if not self.dry_run:
+            if self.dry_run:
+                print(_cmd)
+            else:
+                print("running:", _cmd) if self.debug else print(
+                    "Pulling", self.source + f, "->", self.dest + f
+                )
                 subprocess.run(_cmd, shell=True, stdout=_pipe, stderr=_pipe)
 
     def check_path(self):
@@ -45,15 +50,15 @@ class Options:
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("-n", "--dry-run", help="dry run", action="store_true")
+    parser.add_argument("-d", "--debug", help="debug", action="store_true")
     return parser
 
 
 def parse_arguments():
     parser = create_parser()
     args = vars(parser.parse_args())
-    return Options(args["dry_run"], args["quiet"])
+    return Options(args["dry_run"], args["debug"])
 
 
 if __name__ == "__main__":

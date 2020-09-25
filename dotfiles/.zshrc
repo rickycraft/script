@@ -22,7 +22,7 @@ export HISTFILE=$HOME/.zsh_history
 
 # Aliases
 alias poweroff='sudo shutdown -h now'
-alias rsync='rsync -avzhP'
+alias rsync='rsync -avhP'
 
 # Exports
 export LANG=en_US.UTF-8
