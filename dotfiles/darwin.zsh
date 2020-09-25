@@ -2,6 +2,7 @@
 
 alias cask='brew cask'
 alias bupdate='bubo && brew upgrade --cask $(brew list --cask) &&  bubc'
+alias rsync3='rsync3 -ah --info=progress2'
 
 export GIT_HOME_DIR=$HOME/Git
 export SCRIPT=$HOME/Git/script
