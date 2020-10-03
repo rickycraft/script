@@ -23,7 +23,7 @@ cd /home
 zip -8 -qrn ".tar" "$BACKUP_DIR/$BACKUP_NAME" hassio -x "*.sock"
 
 echo "Copy to remote location"
-scp "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.150:$REMOTE_DIR" 2> /dev/null
+scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.150:$REMOTE_DIR"
 
 # Remove created zip file
 rm "$BACKUP_DIR/$BACKUP_NAME"
