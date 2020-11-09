@@ -210,9 +210,16 @@ class Backup:
             print(" ".join(cmd))
         else:
             print("running:", cmd) if self.debug else print(
-                "Pulling", cmd[-2], "->", cmd[-1]
+                f'Pulling {self.calc_space(cmd[-2])} -> {cmd[-1]}'
             )
             subprocess.run(cmd, stderr=DEVNULL, stdout=self.pipe)
+
+    def calc_space(self, msg: str):
+        l = 30 - len(msg)
+        if (l > 0):
+            return msg + (l * " ")
+        else:
+            return msg
 
     def adb_sync_folders(self, cmd: list):
         for f in self.dir_to_sync:
@@ -224,7 +231,7 @@ class Backup:
                 print(" ".join(_cmd))
             else:
                 print("running:", _cmd) if self.debug else print(
-                    "Pulling", _cmd[-2], "->", _cmd[-1]
+                    f'Pulling {self.calc_space(_cmd[-2])} -> {_cmd[-1]}'
                 )
                 subprocess.run(_cmd, stderr=DEVNULL, stdout=self.pipe)
 
