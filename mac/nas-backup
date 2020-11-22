@@ -34,9 +34,16 @@ class Options:
                 print(_cmd)
             else:
                 print("running:", _cmd) if self.debug else print(
-                    "Pulling", self.source + f, "->", self.dest + f
+                    f'Pulling {self.calc_space(self.source + f)} -> {self.dest + f}'
                 )
                 subprocess.run(_cmd, shell=True, stdout=_pipe, stderr=_pipe)
+
+    def calc_space(self, msg: str):
+        l = 30 - len(msg)
+        if (l > 0):
+            return msg + (l * " ")
+        else:
+            return msg
 
     def check_path(self):
         if not path.exists(self.source):
