@@ -20,7 +20,7 @@ REMOTE_DIR=/volume1/rick/hassio_backups
 
 echo "Creating ZIP"
 cd /home
-zip -8 -qrn ".tar" "$BACKUP_DIR/$BACKUP_NAME" hassio -x "*.sock"
+zip -7 -qrn ".tar" "$BACKUP_DIR/$BACKUP_NAME" hassio -x "*.sock"
 
 echo "Copy to remote location"
 scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.220:$REMOTE_DIR"
