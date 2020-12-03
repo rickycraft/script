@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker ps | awk -F ' ' '{print $2}' | grep -v ID | sort
