@@ -1,0 +1,4 @@
+#!/bin/sh
+
+hassio-stop
+reboot -r now
