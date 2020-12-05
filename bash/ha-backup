@@ -1,7 +1,7 @@
 #!/bin/sh
 
 LAST_BACK=$(ls -t1 /home/hassio/backup | head -n 1 | rev | cut -c5- | rev)
-BACK_NAME=$(date +%x)
+BACK_NAME=$(date +%F)
 
 echo "Create new backup $BACK_NAME"
 ha snap new --name $BACK_NAME -a core_duckdns -a core_dnsmasq -a core_ssh -f homeassistant 
