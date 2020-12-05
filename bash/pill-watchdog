@@ -1,0 +1,19 @@
+#!/bin/sh
+
+PILL_STATUS=$(pm2 status | grep pill_bot | awk '{split($0, a, " "); print a[18]}')
+echo "$PILL_STATUS"
+
+if ping -c 5 1.1.1.1 ; then
+	echo "Success"
+	if [ "$PILL_STATUS" != "online" ]; then
+		echo "Starting pill_bot"
+		pm2 start pill_bot
+	fi
+else
+	echo "Fail"
+	if [ "$PILL_STATUS" = "online" ]; then
+		echo "Stopping pill_bot"
+		pm2 stop pill_bot
+	fi
+fi
+		
