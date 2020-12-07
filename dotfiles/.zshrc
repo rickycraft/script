@@ -43,7 +43,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export PATH=$PATH:/usr/local/bin/my:$SCRIPT/mac
 else
     export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=23'
-    export PATH=$PATH:$SCRIPT/bash
+    export PATH=$PATH:$SCRIPT/bash:$SCRIPT/hassio
 fi
 
 # sudo
