@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scp -P 222 -r $1 srvnas:/volume1/CLOUD/

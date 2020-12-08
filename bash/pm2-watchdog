@@ -5,7 +5,7 @@ PROCESS_NAME="pill_bot"
 
 echo "$PROCESS_STATUS"
 
-if ping -c 5 1.1.1.1 ; then
+if ping -c 5 api.telegram.org ; then
 	echo "Success"
 	if [ "$PROCESS_STATUS" != "online" ]; then
 		echo "Starting $PROCESS_NAME"
