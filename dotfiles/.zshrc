@@ -46,6 +46,9 @@ else
     export PATH=$PATH:$SCRIPT/bash:$SCRIPT/hassio
 fi
 
+# History search
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
 # sudo
 source $ZSH_PLUGINS/sudo/sudo.plugin.zsh
 # zsh-autosuggestions
