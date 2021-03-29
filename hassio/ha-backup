@@ -8,6 +8,7 @@ ha snap new --name $BACK_NAME \
 				-a core_duckdns \
 				-a core_ssh \
 				-a a0d7b954_wireguard \
+				-a a0d7b954_bitwarden \
 				-f homeassistant \
 				-f ssl
 
