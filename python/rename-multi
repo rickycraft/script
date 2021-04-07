@@ -3,15 +3,17 @@
 import subprocess
 import sys
 import os.path
-#################
+
+
 def encode(folder):
-	cmd = ["renamebydir", "-v", folder]
-	subprocess.call(cmd)
-############
+    cmd = ["renamebydir", "-v", folder]
+    subprocess.call(cmd)
+
+
 arguments = sys.argv[1:]
 folderList = []
 for f in arguments:
     folderList.append(f.split('/')[-1])
 for f in folderList:
     encode(f)
-    #print(f)
+    # print(f)
