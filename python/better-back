@@ -14,6 +14,7 @@ avoid = ["/Android", "/data", "/DCIM/.thumbnails", "/Pictures/.thumbnails"]
 dateFile = source+"/sdcard"+Titanium+"date.txt"
 today = date.today()
 
+
 def titaniumCheck():
     with open(dateFile, "r") as f:
         d = datetime.strptime(f.readline(), "%Y%m%d").date()
@@ -29,15 +30,16 @@ def titaniumSet():
 
 def syncPhotos():
     for f in syncFolder:
-        print("#####\nSyncing",f,"\n#####")
+        print("#####\nSyncing", f, "\n#####")
         subprocess.call(["rsync", "-avhzP", "--size-only", source+f, dest+f])
-        #print("#####\nEnd sync",f,"\n#####")
+        # print("#####\nEnd sync",f,"\n#####")
+
 
 def delSyncPhotos():
     for f in delSyncFolder:
-        print("#####\nSyncing",f,"\n#####")
+        print("#####\nSyncing", f, "\n#####")
         subprocess.run(["rsync", "-avhzP", "--size-only", "--del", source+f, dest+f])
-        #print("#####\nEnd sync",f,"\n#####")
+        # print("#####\nEnd sync",f,"\n#####")
 
 
 def shellRm(f):
@@ -71,6 +73,7 @@ def checkDevice():
         return False
 
 # main
+
 
 if (checkMount() == False):
     print("Volumes not mounted")

@@ -11,20 +11,25 @@ file_iniziali = 0
 renamed_files = 0
 isverbose = False
 
-#get file extension
+# get file extension
+
+
 def getext(filename):
     return filename.split('.')[-1]
 
-#verbose
-def verbose(text):
-	if isverbose:
-		print(text)
+# verbose
 
-#valid input
+
+def verbose(text):
+    if isverbose:
+        print(text)
+
+
+# valid input
 if len(sys.argv) > 1 and len(sys.argv) < 4 and os.path.exists(sys.argv[-1]):
     if len(sys.argv) == 3 and '-' in sys.argv[1]:
-    	if sys.argv[1] == '-v':
-    		isverbose = True
+        if sys.argv[1] == '-v':
+            isverbose = True
 
     directory = sys.argv[-1]
     os.chdir(directory)
@@ -39,34 +44,34 @@ if len(sys.argv) > 1 and len(sys.argv) < 4 and os.path.exists(sys.argv[-1]):
     names = []
     for ls in os.listdir(os.getcwd()):
         if os.path.isfile(ls) and ls[0] != '.':
-            if folder in ls or folder.lower() in ls: #not any file already named
+            if folder in ls or folder.lower() in ls:  # not any file already named
                 newname = 'ez'+ls
-                verbose('adjusting name of '+ ls + ' into ' + newname)
+                verbose('adjusting name of ' + ls + ' into ' + newname)
                 os.rename(ls, newname)
                 names.append(newname)
             else:
                 names.append(ls)
     names.sort()
-#get extensions
+# get extensions
     exts = []
     for name in names:
         if not getext(name) in exts:
             exts.append(getext(name))
-#building filename
-    index = 1 #starting index
+# building filename
+    index = 1  # starting index
     for ext in exts:
         files = []
         for name in names:
             if getext(name) == ext:
                 files.append(name)
-#renaming file
+# renaming file
         for file in files:
             renamed_files += 1
             newname = folder + str(index) + '.' + ext
             verbose('renaming ' + file + ' into ' + newname)
             os.rename(file, newname)
             index += 1
-#final check
+# final check
     file_finali = len(os.listdir(os.getcwd()))
     diff_file = file_iniziali - file_finali
     verbose(50*'#')

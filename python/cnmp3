@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
+import sys
+import subprocess
 outputdir = "/Users/rick/GoogleDrive/Musica/2017"
 
-import subprocess
-import sys
-import os
-#############
+
 def encode(inp, outp):
-        cmd0 = ["ffmpeg", "-i", inp, "-c:a", "libmp3lame", "-b:a", "128k", outp]
-        subprocess.call(cmd0)
-############
+    cmd0 = ["ffmpeg", "-i", inp, "-c:a", "libmp3lame", "-b:a", "128k", outp]
+    subprocess.call(cmd0)
+
+
 def move(inp):
-        cmd1 = ["mv", inp, outputdir]
-        subprocess.call(cmd1)
-############
+    cmd1 = ["mv", inp, outputdir]
+    subprocess.call(cmd1)
+
+
 songs = sys.argv[1:]
 
 for song in songs:
-        if not os.path.isfile(song):
-                print("Song not found:", song)
-                sys.exit(1)
-		
+    if not os.path.isfile(song):
+        print("Song not found:", song)
+        sys.exit(1)
+
 for song in songs:
-        songa, tmp = song.partition(".")[::2]
-        newName = song.split("-")
-        del newName[-1]
-        newName = "-".join(newName)+".mp3"
-        encode(song, newName)
-        nome = newName
-        move(nome)
-        os.remove(song)
+    songa, tmp = song.partition(".")[::2]
+    newName = song.split("-")
+    del newName[-1]
+    newName = "-".join(newName)+".mp3"
+    encode(song, newName)
+    nome = newName
+    move(nome)
+    os.remove(song)

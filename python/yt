@@ -6,11 +6,16 @@ import os
 
 ##################
 path = "~/Music/"
+
+
 def encode(inp):
-	cmd = ["youtube-dl", "-x", "--prefer-ffmpeg", "--audio-format", "mp3", "--exec", " mv {} "+path, "-o %(title)s.%(ext)s", inp]
-	subprocess.call(cmd)
+    cmd = ["youtube-dl", "-x", "--prefer-ffmpeg", "--audio-format",
+           "mp3", "--exec", " mv {} "+path, "-o %(title)s.%(ext)s", inp]
+    subprocess.call(cmd)
+
+
 ##################
 urls = sys.argv[1:]
 
-for url in urls :	
-	encode(url)
+for url in urls:
+    encode(url)
