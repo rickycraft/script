@@ -1,5 +1,0 @@
-#!/bin/sh
-
-if [ $1 ]; then
-	echo $1 > /home/hassio/homeassistant/mac_volume
-fi
