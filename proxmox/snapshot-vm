@@ -3,36 +3,35 @@
 # arg1 is the number of snapshot
 # arg2-n is the vm number
 
-if [[ $# < 2 ]]; then
+if [[ $# -lt 2 ]]; then
 	echo "Please provide more arguments"
 	exit 1
 fi
 
+cd /tmp || exit 1
 
-cd /tmp
-
-today=SNAP_`date +"%m_%d_%H_%M"`
+today=SNAP_$(date +"%m_%d_%H_%M")
 nsnap=$1
 echo "Keeping $nsnap snapshots"
 shift
 
-for vmid in $@
+for vmid in "$@"
 do
 	#make new snap
 	echo "Snap vm-$vmid"
-	qm snapshot $vmid $today
+	qm snapshot "$vmid" "$today"
 
 	# list current snapshots
-	qm listsnapshot $vmid | awk '{print $2}' | grep -v current | sort -r > $vmid-snap
-	cat $vmid-snap
+	qm listsnapshot "$vmid" | awk '{print $2}' | grep -v current | sort -r > "$vmid-snap"
+	cat "$vmid-snap"
 
 	#delete old snap
 	n=1
-	while read snapname
+	while read -r snapname
 	do
-		if [ $n -gt $nsnap ]; then
-				qm delsnapshot $vmid $snapname
+		if [ "$n" -gt "$nsnap" ]; then
+				qm delsnapshot "$vmid" "$snapname"
 		fi
-		n=`expr $n + 1`
-	done < $vmid-snap
+		n=$((n + 1))
+	done < "$vmid-snap"
 done
