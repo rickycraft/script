@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo mount -t drvfs P: /mnt/p
+find /mnt/p/giuly/import -name "*.HEIC" -exec ./heic-convert {} \;
+

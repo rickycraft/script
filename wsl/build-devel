@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+  echo "No argument supplied"
+  exit 1
+fi
+
+#rm -rf /home/rick/develop
+#scp -qr srvnas:/volume1/develop /home/rick
+cd /home/rick/develop
+
+sudo docker buildx build --platform linux/arm64 --load -t devel:$1 .
+sudo docker save devel:$1 | pv | ssh srvnas /usr/local/bin/docker load
