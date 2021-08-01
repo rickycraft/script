@@ -1,9 +1,0 @@
-#!/bin/sh
-
-VOL_PID=/tmp/volume_listener.pid
-
-sudo /usr/bin/nohup $SCRIPT/mac/volume-listener &> /dev/null &
-LISTENER_PID=$(echo $!)
-echo Started on PIN $LISTENER_PID
-echo $LISTENER_PID > $VOL_PID.$(date +%s)
-echo $LISTENER_PID > $VOL_PID
