@@ -1,7 +1,12 @@
 #!/bin/bash
 
+if [ -z "$1" ]; then
+  echo "Provide folder to scan"
+  exit 1
+fi
+
 sudo mount -t drvfs P: /mnt/p
 echo "- mounted drive"
 
-find /mnt/p/giuly/import -name "*.HEIC" -exec ./heic-convert {} \;
+find "$1" -iname "*.HEIC" -exec ./heic-convert {} \;
 echo "- finished"

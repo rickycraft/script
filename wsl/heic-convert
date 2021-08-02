@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# find /mnt/p/giuly/import -name "*.HEIC" -exec ./heic-convert {} \;
-
 file="$1"
+echo $file
+
 if [[ -f $file && $file != *"recycle"* && $file != "/mnt/p/heic/"* ]]; then
-	echo $file
-	heif-convert $file ${file/%.HEIC/.png}
+	heif-convert "$file" "${file%.*}.png"
 	mv $file /mnt/p/HEIC
 fi
