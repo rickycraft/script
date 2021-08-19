@@ -2,7 +2,7 @@
 
 BACKUP_DIR="/tmp"
 BACKUP_NAME=$(date +%F).nginx.zip
-REMOTE_DIR=/volume1/rick/backups/nginx
+REMOTE_DIR=/volume1/veeam/nginx
 
 echo "Creating ZIP"
 cd /root
