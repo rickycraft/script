@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scp -r /root/nginx/letsencrypt/live srvnas:/volume1/cloud/Dotfiles
