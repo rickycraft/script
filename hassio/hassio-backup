@@ -11,10 +11,10 @@ echo "Homeassistant version $CORE_VERSION"
 ####
 BACKUP_DIR="/tmp"
 BACKUP_NAME=$(date +%F).hassio.zip
-REMOTE_DIR=/volume1/rick/hassio_backups
+REMOTE_DIR=/volume1/veeam/hassio
 
 echo "Creating ZIP"
-cd /home
+cd /home || exit 1
 zip -7 -qrn ".tar" -x "*.sock" - hassio | pv -tba > "$BACKUP_DIR/$BACKUP_NAME"
 
 echo "Copy to remote location"
@@ -22,4 +22,17 @@ scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.220:$REMOTE_DIR"
 
 # Remove created zip file
 rm "$BACKUP_DIR/$BACKUP_NAME"
+
+# Deleting old backup
+ssh srvnas "ls -1 $REMOTE_DIR" | grep zip | sort -r > "$BACKUP_DIR/list_backup"
+nbck=5
+n=1
+while read -r backname
+do
+	if [ "$n" -gt "$nbck" ]; then
+		echo "Deleting $backname"
+		ssh -n srvnas "rm $REMOTE_DIR/$backname"
+	fi
+	n=$((n + 1))
+done < "$BACKUP_DIR/list_backup"
 

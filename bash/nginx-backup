@@ -1,0 +1,16 @@
+#!/bin/sh
+
+BACKUP_DIR="/tmp"
+BACKUP_NAME=$(date +%F).nginx.zip
+REMOTE_DIR=/volume1/veeam/nginx
+
+echo "Creating ZIP"
+cd /root
+zip -qr - nginx | pv -tba > "$BACKUP_DIR/$BACKUP_NAME"
+
+echo "Copy to remote location"
+scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.220:$REMOTE_DIR"
+
+# Remove created zip file
+rm "$BACKUP_DIR/$BACKUP_NAME"
+
