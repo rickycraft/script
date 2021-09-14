@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd /tmp
+
+curl -Lo installer.sh https://raw.githubusercontent.com/home-assistant/supervised-installer/master/installer.sh
+bash installer.sh -m raspberrypi3-64 -d /home/hassio
+
+rm installer.sh
+
