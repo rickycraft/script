@@ -4,13 +4,13 @@ LAST_BACK=$(ls -t1 /home/hassio/backup | head -n 1 | rev | cut -c5- | rev)
 BACK_NAME=$(date +%F)
 
 echo "Create new backup $BACK_NAME"
-ha snap new --name $BACK_NAME \
+ha backups new --name $BACK_NAME \
 				-a core_duckdns \
-				-a core_ssh \
 				-a a0d7b954_wireguard \
 				-a a0d7b954_bitwarden \
 				-f homeassistant \
-				-f ssl
+				-f ssl \
+				-f addons/local
 
 echo "Removing old backup $LAST_BACK"
-ha snap rm $LAST_BACK
+ha backups rm $LAST_BACK
