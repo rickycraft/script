@@ -1,4 +1,0 @@
-#!/bin/sh
-
-hassio-stop
-shutdown -r now

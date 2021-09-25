@@ -1,1 +1,3 @@
+#!/bin/sh
+
 systemctl enable hassio-supervisor hassio-apparmor
