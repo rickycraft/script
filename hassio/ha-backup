@@ -7,30 +7,29 @@ REMOTE_DIR=/volume1/veeam/hassio
 NBCK_LOCAL=3
 NBCK_REMOTE=14
 
-echo "Create new backup $BACK_NAME"
+echo "- Create new backup $BACK_NAME"
 ha backups new --name $BACK_NAME
 
-echo "Purge old local backup"
+echo "- Purge old local backup"
 ls -t1 "$BACKUP_DIR" | rev | cut -c5- | rev >"$LISTBCK"
 n=1
 while read -r backname; do
 	if [ "$n" -gt "$NBCK_LOCAL" ]; then
-		echo "Deleting $backname"
+		echo "Delete local $backname"
 		ha backups rm "$backname"
 	fi
 	n=$((n + 1))
 done <"$LISTBCK"
 
-echo "Copy new backup"
-echo "Copy to remote location"
-scp -P 222 "$BACKUP_DIR/*.tar" "root@192.168.1.220:$REMOTE_DIR"
+echo "- Copy to remote location"
+scp -P 222 "$BACKUP_DIR"/*.tar "root@192.168.1.220:$REMOTE_DIR"
 
-echo "Deleting old remote backup"
+echo "- Deleting old remote backup"
 ssh srvnas "ls -1 $REMOTE_DIR" | grep zip | sort -r >"$LISTBCK"
 n=1
 while read -r backname; do
 	if [ "$n" -gt "$NBCK_REMOTE" ]; then
-		echo "Deleting $backname"
+		echo "Delete remote $backname"
 		ssh -n srvnas "rm $REMOTE_DIR/$backname"
 	fi
 	n=$((n + 1))
