@@ -5,7 +5,12 @@ BACK_NAME=$(date +%F)
 
 echo "Create new backup $BACK_NAME"
 ha backups new --name $BACK_NAME \
+				-a core_configurator \
+				-a core_ssh \
 				-a core_duckdns \
+				-a core_rpc_shutdown \
+				-a a0d7b954_esphome \
+				-a a0d7b954_sqlite-web \
 				-a a0d7b954_wireguard \
 				-a a0d7b954_bitwarden \
 				-f homeassistant \
