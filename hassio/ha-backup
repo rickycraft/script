@@ -1,21 +1,34 @@
 #!/bin/bash
 
-LAST_BACK=$(ls -t1 /home/hassio/backup | head -n 1 | rev | cut -c5- | rev)
 BACK_NAME=$(date +%F)
+LISTBCK="/tmp/ha-backups"
+BCKDIR="/home/hassio/backup"
+NBCK=5
 
+# Create ha core backup
 echo "Create new backup $BACK_NAME"
 ha backups new --name $BACK_NAME \
-				-a core_configurator \
-				-a core_ssh \
-				-a core_duckdns \
-				-a core_rpc_shutdown \
-				-a a0d7b954_esphome \
-				-a a0d7b954_sqlite-web \
-				-a a0d7b954_wireguard \
-				-a a0d7b954_bitwarden \
-				-f homeassistant \
-				-f ssl \
-				-f addons/local
+	-a core_configurator \
+	-a core_ssh \
+	-a core_duckdns \
+	-a core_rpc_shutdown \
+	-a a0d7b954_esphome \
+	-a a0d7b954_sqlite-web \
+	-a a0d7b954_wireguard \
+	-a a0d7b954_bitwarden \
+	-f homeassistant \
+	-f ssl \
+	-f addons/local \
+	-f share \
+	-f media
 
-echo "Removing old backup $LAST_BACK"
-ha backups rm $LAST_BACK
+# Purge old backup
+ls -t1 "$BCKDIR" | rev | cut -c5- | rev >"$LISTBCK"
+n=1
+while read -r backname; do
+	if [ "$n" -gt "$NBCK" ]; then
+		echo "Deleting $backname"
+		ha backups rm "$backname"
+	fi
+	n=$((n + 1))
+done <"$LISTBCK"
