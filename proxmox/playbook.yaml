@@ -1,0 +1,98 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    arc_max: 1
+
+  tasks:
+    # - name: Update apt-list
+    #   copy:
+    #     content: "deb http://download.proxmox.com/debian/pve buster pve-no-subscription"
+    #     dest: /etc/apt/sources.list.d/pve-enterprise.list
+    - name: Install packages
+      apt:
+        name: ["libsasl2-modules", "postfix", "cron"]
+        state: present
+        update_cache: yes
+    - name: Crete script dir
+      file:
+        path: /root/script
+        state: directory
+        mode: "0755"
+    - name: Copy scripts
+      copy:
+        src: files/{{ item.file }}
+        dest: /root/script/{{ item.file }}
+        mode: "0755"
+      loop:
+        - { file: "backup-daily.sh"}
+        - { file: "notify-snapshot.sh"}
+        - { file: "notify-zpool.sh"}
+    - name: Edit relayhost main.cf
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: "^relayhost ="
+        line: "relayhost = [mail.mailbo.it]:587"
+      notify: ["Restart postfix"]
+    - name: Add to main.cf
+      lineinfile:
+        path: /etc/postfix/main.cf
+        line: "{{ item.line }}"
+      loop:
+        - { line: "smtp_sasl_security_options = noanonymous" }
+        - { line: "smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd" }
+        - { line: "smtp_sasl_auth_enable = yes" }
+      notify: ["Restart postfix"]
+    - name: Copy sasl_passwd
+      copy:
+        src: files/sasl_passwd
+        dest: /etc/postfix/sasl_passwd
+      register: update_sasl_passwd
+    - name: Postmap sasl_passwd
+      command: postmap /etc/postfix/sasl_passwd
+      when: update_sasl_passwd.changed
+      notify: ["Restart postfix"]
+    - name: Add cron path
+      cron:
+        name: PATH
+        env: yes
+        job: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+    - name: Add cron home
+      cron:
+        name: HOME
+        env: yes
+        job: /root/script
+    
+    
+    
+    - name: Cron
+      cron:
+        name: "Cron {{ item.file }}"
+        job: "{{ item.file }}"
+        minute: "0"
+        hour: "{{ item.hour }}"
+        weekday: "{{ item.weekday }}"
+      loop:
+      - { file: "backup-daily.sh", hour: "12,21", weekday: "1-6"}
+      - { file: "notify-snapshot.sh", hour: "21", weekday: "*"}
+      - { file: "notify-zpool.sh", hour: "21", weekday: "*"}
+    # - name: Set arc_max
+    #   lineinfile:
+    #     path: /etc/modprobe.d/zfs.conf
+    #     line: "options zfs zfs_arc_max={{ arc_max * 1024*1024*1024 }}"
+    # - name: Boot delay
+    #   lineinfile:
+    #     path: /etc/default/zfs
+    #     line: "ZFS_INITRD_PRE_MOUNTROOT_SLEEP='10'"
+    # - name: Download virtio
+    #   get_url:
+    #     url: "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+    #     dest: /var/lib/vz/template/iso
+
+  handlers:
+    - name: Restart postfix
+      service:
+        name: postfix
+        state: restarted
+    - name: Build initramfs
+      command: "update-initramfs -u -k all"
