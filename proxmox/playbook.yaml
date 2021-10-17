@@ -5,10 +5,10 @@
     arc_max: 1
 
   tasks:
-    # - name: Update apt-list
-    #   copy:
-    #     content: "deb http://download.proxmox.com/debian/pve buster pve-no-subscription"
-    #     dest: /etc/apt/sources.list.d/pve-enterprise.list
+    - name: Update apt-list
+      copy:
+        content: "deb http://download.proxmox.com/debian/pve buster pve-no-subscription"
+        dest: /etc/apt/sources.list.d/pve-enterprise.list
     - name: Install packages
       apt:
         name: ["libsasl2-modules", "postfix", "cron"]
@@ -21,13 +21,25 @@
         mode: "0755"
     - name: Copy scripts
       copy:
-        src: files/{{ item.file }}
-        dest: /root/script/{{ item.file }}
+        src: "files/{{ item.file }}"
+        dest: "/root/script/{{ item.file }}.template"
         mode: "0755"
+      register: copy_scripts
       loop:
         - { file: "backup-daily.sh"}
         - { file: "notify-snapshot.sh"}
         - { file: "notify-zpool.sh"}
+    - name: Copy file
+      copy:
+        remote_src: true
+        src: "/root/script/{{ item.file }}.template"
+        dest: "/root/script/{{ item.file }}"
+        mode: "0755"
+      notify: ["Edit cliente","Edit node"]
+      when: copy_scripts.changed
+      loop:
+      - { file: "notify-snapshot.sh"}
+      - { file: "notify-zpool.sh"}
     - name: Edit relayhost main.cf
       lineinfile:
         path: /etc/postfix/main.cf
@@ -62,9 +74,6 @@
         name: HOME
         env: yes
         job: /root/script
-    
-    
-    
     - name: Cron
       cron:
         name: "Cron {{ item.file }}"
@@ -76,14 +85,17 @@
       - { file: "backup-daily.sh", hour: "12,21", weekday: "1-6"}
       - { file: "notify-snapshot.sh", hour: "21", weekday: "*"}
       - { file: "notify-zpool.sh", hour: "21", weekday: "*"}
-    # - name: Set arc_max
-    #   lineinfile:
-    #     path: /etc/modprobe.d/zfs.conf
-    #     line: "options zfs zfs_arc_max={{ arc_max * 1024*1024*1024 }}"
-    # - name: Boot delay
-    #   lineinfile:
-    #     path: /etc/default/zfs
-    #     line: "ZFS_INITRD_PRE_MOUNTROOT_SLEEP='10'"
+    - name: Set arc_max
+      lineinfile:
+        path: /etc/modprobe.d/zfs.conf
+        line: "options zfs zfs_arc_max={{ arc_max * 1024*1024*1024 }}"
+        create: yes
+      notify: ["Build initramfs"]
+    - name: Boot delay
+      lineinfile:
+        path: /etc/default/zfs
+        line: "ZFS_INITRD_PRE_MOUNTROOT_SLEEP='10'"
+      notify: ["Build initramfs"]
     # - name: Download virtio
     #   get_url:
     #     url: "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
@@ -95,4 +107,20 @@
         name: postfix
         state: restarted
     - name: Build initramfs
-      command: "update-initramfs -u -k all"
+      command: "update-initramfs -u -k all"   
+    - name: Edit node
+      lineinfile:
+        path: "/root/script/{{ item.file }}"
+        regexp: "^NODO=$"
+        line: "NODO={{ ansible_hostname }}"
+      loop:
+      - { file: "notify-snapshot.sh"}
+      - { file: "notify-zpool.sh"}
+    - name: Edit cliente
+      lineinfile:
+        path: "/root/script/{{ item.file }}"
+        regexp: "^CLIENTE=$"
+        line: "CLIENTE={{ ansible_fqdn.split('.')[1] }}"
+      loop:
+      - { file: "notify-snapshot.sh"}
+      - { file: "notify-zpool.sh"}

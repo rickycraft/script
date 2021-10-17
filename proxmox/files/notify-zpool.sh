@@ -1,6 +1,6 @@
 #!/bin/sh
-NODO=""
-CLIENTE=""
+NODO=
+CLIENTE=
 DATA=$(date +%F)
 {
   zpool list &
