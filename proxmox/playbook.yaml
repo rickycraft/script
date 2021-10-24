@@ -23,14 +23,11 @@
         mode: "0755"
     - name: Copy scripts
       copy:
-        src: "files/{{ item.file }}"
-        dest: "/root/script/{{ item.file }}.template"
+        src: "files/{{ item }}"
+        dest: "/root/script/{{ item }}.template"
         mode: "0755"
       register: copy_scripts
-      loop:
-        - { file: "backup-daily.sh"}
-        - { file: "notify-snapshot.sh"}
-        - { file: "notify-zpool.sh"}
+      loop: ["notify-snapshot.sh", "notify-zpool.sh", "backup-daily.sh"]
     - name: Copy file
       copy:
         remote_src: true
@@ -39,10 +36,7 @@
         mode: "0755"
       notify: ["Edit cliente","Edit node"]
       when: copy_scripts.changed
-      loop:
-      - { file: "backup-daily.sh"}
-      - { file: "notify-snapshot.sh"}
-      - { file: "notify-zpool.sh"}
+      loop: ["notify-snapshot.sh", "notify-zpool.sh", "backup-daily.sh"]
     - name: Add list_datastore
       lineinfile:
         line: "{{ item.pool }}"
@@ -59,10 +53,7 @@
       lineinfile:
         path: /etc/postfix/main.cf
         line: "{{ item.line }}"
-      loop:
-        - { line: "smtp_sasl_security_options = noanonymous" }
-        - { line: "smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd" }
-        - { line: "smtp_sasl_auth_enable = yes" }
+      loop: ["smtp_sasl_security_options = noanonymous" , "smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd", "smtp_sasl_auth_enable = yes"]
       notify: ["Restart postfix"]
     - name: Copy sasl_passwd
       copy:
@@ -121,17 +112,13 @@
       command: "update-initramfs -u -k all"   
     - name: Edit node
       lineinfile:
-        path: "/root/script/{{ item.file }}"
+        path: "/root/script/{{ item }}"
         regexp: "^NODO=$"
         line: "NODO={{ ansible_hostname }}"
-      loop:
-      - { file: "notify-snapshot.sh"}
-      - { file: "notify-zpool.sh"}
+      loop: ["notify-snapshot.sh", "notify-zpool.sh"]
     - name: Edit cliente
       lineinfile:
-        path: "/root/script/{{ item.file }}"
+        path: "/root/script/{{ item }}"
         regexp: "^CLIENTE=$"
         line: "CLIENTE={{ ansible_fqdn.split('.')[1] }}"
-      loop:
-      - { file: "notify-snapshot.sh"}
-      - { file: "notify-zpool.sh"}
+      loop: ["notify-snapshot.sh", "notify-zpool.sh"]
