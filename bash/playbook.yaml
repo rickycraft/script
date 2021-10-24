@@ -106,9 +106,8 @@
     # Install nginx-proxy-manager
     - name: Copy nginx files
       unarchive:
-        src: files/nginx.zip
+        src: files/nginx.tar
         dest: /root
-      notify: ["Relink nginx certificate"]
     - name: Install nginx service
       copy:
         src: /root/nginx/nginx-proxy-manager.service
@@ -153,8 +152,4 @@
 
   # Handlers
   handlers:
-    - name: Relink nginx certificate
-      shell:
-        cmd: /root/script/bash/link-certs
-        chdir: /root/nginx/letsencrypt
         
