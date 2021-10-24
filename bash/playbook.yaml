@@ -2,6 +2,12 @@
 - hosts: all
   become: true
   tasks:
+    - name: Prepare files
+      command:
+        cmd: bash get-files
+        creates: files
+      delegate_to: localhost
+      become: no
     - name: Install packages
       apt:
         name: ["python3","python3-pip","python3-virtualenv","tmux","curl","sysstat","htop","git","network-manager","unzip","zip","tar"]
