@@ -12,19 +12,16 @@
         path: "/etc/ssh/sshd_config"
         regexp: "^#PermitRootLogin without-password"
         line: "PermitRootLogin without-password"
-      notify: ["Restart ssh"]
     - name: Copy ssh dir
       copy:
         src: files/.ssh/
         dest: /root/.ssh
         mode: '600'
-      notify: ["Restart ssh"]
     - name: Copy ssh private key
       copy:
         src: files/id_rsa
         dest: /root/.ssh/id_rsa
         mode: '400'
-      notify: ["Restart ssh"]
     - name: Get hassio script
       get_url:
         url: "https://raw.githubusercontent.com/home-assistant/supervised-installer/master/installer.sh"
@@ -156,10 +153,6 @@
 
   # Handlers
   handlers:
-    - name: Restart ssh
-      service:
-        name: sshd
-        state: restarted
     - name: Relink nginx certificate
       shell:
         cmd: /root/script/bash/link-certs
