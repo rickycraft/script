@@ -1,8 +1,10 @@
 ---
-- hosts: all
+- hosts: proxmox
   become: yes
   vars:
     arc_max: 1
+    zpool:
+      - { pool: "rpool"}
 
   tasks:
     - name: Update apt-list
@@ -38,8 +40,15 @@
       notify: ["Edit cliente","Edit node"]
       when: copy_scripts.changed
       loop:
+      - { file: "backup-daily.sh"}
       - { file: "notify-snapshot.sh"}
       - { file: "notify-zpool.sh"}
+    - name: Add list_datastore
+      lineinfile:
+        line: "{{ item.pool }}"
+        path: "/root/script/list_datastore"
+        create: true
+      loop: "{{ zpool }}"
     - name: Edit relayhost main.cf
       lineinfile:
         path: /etc/postfix/main.cf
@@ -100,6 +109,8 @@
     #   get_url:
     #     url: "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
     #     dest: /var/lib/vz/template/iso
+
+    # add autotrim on selected pool
 
   handlers:
     - name: Restart postfix
