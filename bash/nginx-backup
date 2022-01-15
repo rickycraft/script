@@ -9,7 +9,7 @@ cd /root
 tar -cf "$BACKUP_DIR/$BACKUP_NAME" nginx
 
 echo "Copy to remote location"
-scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@192.168.1.220:$REMOTE_DIR"
+scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
 
 # Remove created zip file
 rm "$BACKUP_DIR/$BACKUP_NAME"
