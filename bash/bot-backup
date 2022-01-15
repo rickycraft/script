@@ -1,3 +1,3 @@
 #!/bin/sh
 
-scp -P 222 /root/telegram_pill_bot/db.json root@192.168.1.220:/volume1/veeam/raspi
+scp -P 222 /root/telegram_pill_bot/db.json root@srvnas.roveri.local:/volume1/veeam/raspi
