@@ -6,7 +6,7 @@ SRC_DIR=$(echo $1 | rev | cut -f1 -d/ | rev)
 BACKUP_NAME="$SRC_DIR.tar"
 REMOTE_DIR=/volume1/veeam/raspi
 
-echo "Creating ZIP"
+echo "Creating $BACKUP_NAME"
 cd $1
 cd ..
 tar -cf "$BACKUP_DIR/$BACKUP_NAME" $SRC_DIR
