@@ -22,7 +22,7 @@ while read -r backname; do
 done <"$LISTBCK"
 
 echo "- Copy to remote location"
-scp -P 222 "$BACKUP_DIR"/*.tar "root@192.168.1.220:$REMOTE_DIR"
+scp -P 222 "$BACKUP_DIR"/*.tar "root@srvnas.roveri.local:$REMOTE_DIR"
 
 echo "- Deleting old remote backup"
 ssh srvnas "ls -t1 $REMOTE_DIR" | grep tar >"$LISTBCK"
