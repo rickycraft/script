@@ -1,6 +1,6 @@
 #!/bin/sh
 
-LOCAL_DIR=/media/oneplus
+LOCAL_DIR=/mnt/oneplus
 REMOTE_DIR=/volume1/oneplus
 
 if ! command -v adb-sync &>/dev/null; then
@@ -10,7 +10,7 @@ fi
 
 if [[ ! -d "$LOCAL_DIR/sdcard" ]]; then
   echo '######### MOUNT NFS #########'
-  pkexec mount -t nfs -o nfsvers=4,noexec 192.168.1.220:$REMOTE_DIR $LOCAL_DIR
+  pkexec mount -t nfs -o nfsvers=4,noexec srvnas.roveri.local:$REMOTE_DIR $LOCAL_DIR
   if [[ $? != 0 ]]; then
     echo "Cannot mount nfs"
     exit 1
