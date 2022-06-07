@@ -1,4 +1,4 @@
 #!/bin/sh
 
-scp /root/nginx/letsencrypt/live/npm-*/* srvnas:/volume1/cloud/Dotfiles/roveri.duckdns.org
+scp /root/homelab/letsencrypt/live/npm-*/* srvnas:/volume1/cloud/Dotfiles/roveri.duckdns.org
 
