@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ -f "$1" ]]; then
+  echo "Selected file $1"
+else
+  echo "Usage: $0 <path>"
+  exit 1
+fi
+
+TEMPFILE=$1.tmp
+# replace newline
+cat $1 | tr '\n' ' ' > $TEMPFILE
+# replace accentate
+sed -i 's/`a/à/g' $TEMPFILE
+sed -i 's/`e/è/g' $TEMPFILE
+sed -i 's/`i/ì/g' $TEMPFILE
+# caratteri speciali
+sed -i "s/’/'/g" $TEMPFILE
+sed -i 's/”/"/g' $TEMPFILE
+# word break
+sed -i 's/-//g' $TEMPFILE
+
+cp $1 $1.bak
+mv $TEMPFILE $1
