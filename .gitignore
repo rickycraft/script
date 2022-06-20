@@ -5,3 +5,4 @@ files
 ansible.cfg
 inventory
 docker
+temp*

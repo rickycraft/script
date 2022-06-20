@@ -7,18 +7,29 @@ else
   exit 1
 fi
 
+FILE=$1
 TEMPFILE=$1.tmp
-# replace newline
-cat $1 | tr '\n' ' ' > $TEMPFILE
-# replace accentate
-sed -i 's/`a/à/g' $TEMPFILE
-sed -i 's/`e/è/g' $TEMPFILE
-sed -i 's/`i/ì/g' $TEMPFILE
-# caratteri speciali
-sed -i "s/’/'/g" $TEMPFILE
-sed -i 's/”/"/g' $TEMPFILE
-# word break
-sed -i 's/-//g' $TEMPFILE
 
-cp $1 $1.bak
-mv $TEMPFILE $1
+function replace {
+  # replace newline
+  cat $FILE | tr '\n' ' ' > $TEMPFILE
+  # replace accentate
+  sed -i 's/`a/à/g' $TEMPFILE
+  sed -i 's/`e/è/g' $TEMPFILE
+  sed -i 's/`i/ì/g' $TEMPFILE
+  sed -i 's/`o/ò/g' $TEMPFILE
+  # caratteri speciali
+  sed -i "s/’/'/g" $TEMPFILE
+  sed -i 's/”/"/g' $TEMPFILE
+  # word break
+  sed -i 's/-//g' $TEMPFILE
+
+  cp $FILE $FILE.bak
+  mv $TEMPFILE $FILE
+}
+
+while inotifywait -e close_write $FILE
+do
+  echo "Replacing"
+  replace
+done
