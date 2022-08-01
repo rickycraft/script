@@ -12,7 +12,7 @@ cd ..
 tar -cf "$BACKUP_DIR/$BACKUP_NAME" $SRC_DIR
 
 echo "Copy to remote location"
-scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
+scp -O -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
 
 # Remove created zip file
 rm "$BACKUP_DIR/$BACKUP_NAME"
