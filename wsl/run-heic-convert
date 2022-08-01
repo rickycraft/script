@@ -1,12 +1,13 @@
 #!/bin/bash
 
+sudo mount -t drvfs P: /mnt/p
+echo "- mounted drive"
+
 if [ -z "$1" ]; then
   echo "Provide folder to scan"
   exit 1
 fi
 
-sudo mount -t drvfs P: /mnt/p
-echo "- mounted drive"
-
-find "$1" -iname "*.HEIC" -exec ./heic-convert {} \;
+find "$1" -iname "*.HEIC" -print0 | xargs -0 -n 1 -P4 ./heic-convert 
+#-exec ./heic-convert {} \;
 echo "- finished"
