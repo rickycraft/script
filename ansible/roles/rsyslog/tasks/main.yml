@@ -1,0 +1,5 @@
+---
+- name: "Add logging for serverity more than info"
+  ansible.builtin.lineinfile:
+    path: "/etc/rsyslog.d/90-sendlog.conf"
+    line: "*.notice @srvnas.roveri.local"
