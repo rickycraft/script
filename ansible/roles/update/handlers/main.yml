@@ -1,0 +1,4 @@
+---
+- name: "Restart"
+  ansible.builtin.reboot:
+    msg: "restarting after update"
