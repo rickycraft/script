@@ -7,32 +7,34 @@ REMOTE_DIR=/volume1/veeam/hassio
 NBCK_LOCAL=3
 NBCK_REMOTE=14
 
-echo "- Create new backup $BACK_NAME"
-ha backups new --name $BACK_NAME
+BACKUP_SLUG=$(ha backups new --name $BACK_NAME | awk -F ": " '{print $2}')
+echo "Created new backup $BACKUP_SLUG"
 
-echo "- Purge old local backup"
 ls -t1 "$BACKUP_DIR" | rev | cut -c5- | rev >"$LISTBCK"
 n=1
 while read -r backname; do
 	if [ "$n" -gt "$NBCK_LOCAL" ]; then
+		ha backups rm "$backname" > /dev/null
 		echo "Delete local $backname"
-		ha backups rm "$backname"
 	fi
 	n=$((n + 1))
 done <"$LISTBCK"
 
-echo "- Copy to remote location"
 scp -P 222 "$BACKUP_DIR"/*.tar "root@srvnas.roveri.local:$REMOTE_DIR"
+echo "Copied $BACKUP_SLUG.tar to remote"
 
-echo "- Deleting old remote backup"
 ssh srvnas "ls -t1 $REMOTE_DIR" | grep tar >"$LISTBCK"
 n=1
 while read -r backname; do
 	if [ "$n" -gt "$NBCK_REMOTE" ]; then
-		echo "Delete remote $backname"
 		ssh -n srvnas "rm $REMOTE_DIR/$backname"
+		echo "Delete remote $backname"
 	fi
 	n=$((n + 1))
 done <"$LISTBCK"
 
+# Copy the latest slug with date
+ha backups ls | egrep "(date|slug):" | ssh -p 222 root@srvnas.roveri.local "cat > $REMOTE_DIR/latest.txt"
+
+# Remove tempfile
 rm "$LISTBCK"
