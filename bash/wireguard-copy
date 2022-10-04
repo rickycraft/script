@@ -1,3 +1,3 @@
 #!/bin/bash
 
-scp -r /home/hassio/ssl/wireguard srvnas:/volume1/cloud/Dotfiles
+scp -r -P 222 /home/hassio/ssl/wireguard srvnas:/volume1/cloud/Dotfiles
