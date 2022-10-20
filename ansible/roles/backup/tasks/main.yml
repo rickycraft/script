@@ -1,0 +1,30 @@
+---
+- name: "List crontabs"
+  ansible.builtin.shell: (ls /var/spool/cron/crontabs) 2>/dev/null
+  register: crontabs
+  changed_when: false
+  failed_when: false
+- name: "Fetch crontabs"
+  ansible.builtin.fetch:
+    src: "/var/spool/cron/crontabs/{{ item }}"
+    dest: "/home/rick/backups/{{ ansible_hostname }}/crontab/{{ item }}"
+    flat: true
+  with_items: "{{ crontabs.stdout_lines }}"
+  when: crontabs.stdout_lines | length > 0
+- name: "List user scripts"
+  ansible.builtin.shell: |
+   set -o pipefail
+   cd /usr/local/bin
+   (find . -maxdepth 1 -type f | cut -c3-)
+  args:
+    executable: /bin/bash
+  register: scripts
+  changed_when: false
+  failed_when: false
+- name: "Fetch user scripts"
+  ansible.builtin.fetch:
+    src: "/usr/local/bin/{{ item }}"
+    dest: "/home/rick/backups/{{ ansible_hostname }}/bin/{{ item }}"
+    flat: true
+  with_items: "{{ scripts.stdout_lines }}"
+  when: scripts.stdout_lines | length > 0
