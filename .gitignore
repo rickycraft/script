@@ -3,6 +3,6 @@ vscode_settings.json
 .vscode
 files
 ansible.cfg
-inventory
+*inventory
 docker
 temp*
