@@ -1,6 +1,16 @@
 ---
-- hosts: all
+- name: "Homelab"
+  hosts: all
   become: true
+  tasks:
+    - name: "Disable ipv6"
+      ansible.builtin.sysctl:
+        name: net.ipv6.conf.all.disable_ipv6
+        value: 1
+        sysctl_set: true
+        state: present
+        reload: true
   roles:
+    - backup
     - rsyslog
     - update
