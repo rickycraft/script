@@ -28,3 +28,20 @@
     flat: true
   with_items: "{{ scripts.stdout_lines }}"
   when: scripts.stdout_lines | length > 0
+- name: "List user systemd units"
+  ansible.builtin.shell: |
+   set -o pipefail
+   cd /etc/systemd/system
+   (find . -type f -name "*.service" | cut -c3-)
+  args:
+    executable: /bin/bash
+  register: systemd
+  changed_when: false
+  failed_when: false
+- name: "Fetch user systemd"
+  ansible.builtin.fetch:
+    src: "/etc/systemd/system/{{ item }}"
+    dest: "{{ bck_dir }}/{{ ansible_hostname }}/systemd/{{ item }}"
+    flat: true
+  with_items: "{{ systemd.stdout_lines }}"
+  when: systemd.stdout_lines | length > 0
