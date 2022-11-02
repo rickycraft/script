@@ -14,6 +14,8 @@
     - name: "Set timezone Europe/Rome"
       community.general.timezone:
         name: "Europe/Rome"
+  vars:
+    bck_dir: "/home/rick/backups"
   roles:
     - backup
     - rsyslog
