@@ -1,4 +1,9 @@
 ---
+- name: "Proxy APT"
+  ansible.builtin.lineinfile:
+    path: /etc/apt/apt.conf.d/60proxy
+    line: 'Acquire::http { Proxy "http://srvapt.roveri.local:3142"; }'
+    create: true
 - name: "Update package list"
   ansible.builtin.apt:
     update_cache: true
