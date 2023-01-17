@@ -7,6 +7,8 @@ import argparse
 import sys
 from subprocess import PIPE, DEVNULL
 from datetime import date
+import better_adb_sync.src.ADBSync as ADBSync
+import logging
 
 
 EXIT_ERROR = 1
@@ -25,7 +27,7 @@ BLACKLIST_DIR = [
     "recordings", "podcasts"
 ]
 SDCARD = "/sdcard"
-TITANIUM_BACK = "/Backups"
+TITANIUM_BACK = "Backups"
 
 
 class Backup:
@@ -76,7 +78,7 @@ class Backup:
 
         print("Parsed Arg:", vars(self)) if self.debug else None
 
-    # read output destination folder
+    """ read output destination folder """
     def read_destination(self):
         path = None
         # take path from env
@@ -100,7 +102,7 @@ class Backup:
             sys.stderr.write("File path error\n")
             sys.exit(EXIT_ERROR)
 
-    # read option from the passed arguments
+    """ read option from the passed arguments """
     def read_flags(self):
         self.delete = self.arg["d"]
         self.junk = self.arg["j"]
@@ -109,7 +111,7 @@ class Backup:
         self.dry_run = self.arg["n"]
         self.device_id = self.arg["i"] if self.arg["i"] else ""
 
-    # read file w/ folder to sync
+    """ read file w/ folder to sync """
     def read_syncdir(self):
         if self.arg["f"]:
             with open(self.arg["f"], "r") as f:
@@ -119,7 +121,7 @@ class Backup:
         else:
             print("Sync all dirs") if self.debug else None
 
-    # check if a device is connected
+    """ check if a device is connected """
     def check_device(self):
         subprocess.run(["adb", "start-server"], stdout=DEVNULL, stderr=DEVNULL)
         out = subprocess.run(
@@ -137,7 +139,7 @@ class Backup:
         else:
             return False
 
-    # remove folder/file from device
+    """ remove folder/file from device """
     def adb_shell_rm(self, cmd: str):
         # check that is somewhat valid
         if len(cmd) < 2:
@@ -163,11 +165,12 @@ class Backup:
             else:
                 print("Removing Titanium")
                 shutil.rmtree(path)
+                os.mkdir(path)
                 if len(self.dir_to_sync) > 0 and TITANIUM_BACK not in self.dir_to_sync:
                     self.dir_to_sync.append(TITANIUM_BACK)
 
     def check_titanium_date(self):
-        titanium_dir = self.out_dir + TITANIUM_BACK
+        titanium_dir = os.path.join(self.out_dir,TITANIUM_BACK)
         if not os.path.exists(titanium_dir):
             return False
         m_date = date.fromtimestamp(os.path.getmtime(titanium_dir))
@@ -193,7 +196,7 @@ class Backup:
         self.del_junk()
         self.del_titanium()
         # create command
-        cmd = ["adb-sync", "--pull"]
+        cmd = ["--pull"]
         cmd.append("--del") if self.delete else None
         cmd.append("-n") if self.dry_run else None
         # either some folder or all the sdcard
@@ -214,16 +217,23 @@ class Backup:
             )
 
     def adb_sync_folder(self, _cmd: list, local: str, remote: str):
+        # check if local folder exists
+        if not os.path.exists(local):
+            os.makedirs(local)
+        # build args
         cmd = _cmd.copy()
         cmd.append(local)
         cmd.append(remote)
+        # overwrite args
+        sys.argv = cmd
         if self.dry_run:
             print(" ".join(cmd))
         else:
             print("running:", cmd) if self.debug else print(
                 f'Pulling {self.calc_space(cmd[-2])} -> {cmd[-1]}'
             )
-            subprocess.run(cmd, stderr=DEVNULL, stdout=self.pipe)
+            ADBSync.main()
+            logging.getLogger().handlers.clear()
 
     def __init__(self):
         self.parse_args()
@@ -235,7 +245,17 @@ class Backup:
         else:
             return msg
 
+""" check if adb-sync is installed """
+def check_adb_sync():
+    try:
+        import better_adb_sync.src.ADBSync
+    except ModuleNotFoundError or ImportError as ee:
+        print("Cannot import ADB Sync, use command below")
+        print("git clone git@github.com:SelfAdjointOperator/better-adb-sync.git better_adb_sync")
+        exit(1)
+
 if __name__ == "__main__":
+    check_adb_sync()
     try:
         backup = Backup()
         if not backup.check_device():
