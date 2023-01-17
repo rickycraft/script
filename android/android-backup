@@ -11,7 +11,7 @@ import sys
 from datetime import date
 from subprocess import DEVNULL, PIPE
 
-from better_adb_sync.src import ADBSync
+import adbsync
 
 EXIT_ERROR = 1
 JUNK_FILES = [
@@ -170,7 +170,7 @@ class Backup:
                 shutil.rmtree(path)
                 os.mkdir(path)
                 if len(self.dir_to_sync) > 0 and TITANIUM_BACK not in self.dir_to_sync:
-                    self.dir_to_sync.append(TITANIUM_BACK)
+                    self.dir_to_sync.append([TITANIUM_BACK])
 
     def check_titanium_date(self):
         titanium_dir = os.path.join(self.out_dir, TITANIUM_BACK)
@@ -192,7 +192,7 @@ class Backup:
         )
         for f in out:
             if f.lower() not in BLACKLIST_DIR:
-                self.dir_to_sync.append(f)
+                self.dir_to_sync.append([f])
 
     def adb_sync(self):
         self.folder_list()
@@ -233,7 +233,7 @@ class Backup:
         print("running:", cmd) if self.debug else print(
             f'Pulling {self.calc_space(remote)} -> {local}'
         )
-        ADBSync.main()
+        adbsync.main()
         logging.getLogger().handlers.clear()
 
     def __init__(self):
@@ -247,18 +247,7 @@ class Backup:
             return msg
 
 
-def check_adb_sync():
-    """ check if adb-sync is installed """
-    try:
-        __import__('better_adb_sync.src.ADBSync')
-    except (ModuleNotFoundError, ImportError):
-        print("Cannot import ADB Sync, use command below")
-        print("git clone git@github.com:SelfAdjointOperator/better-adb-sync.git better_adb_sync")
-        sys.exit(1)
-
-
 if __name__ == "__main__":
-    check_adb_sync()
     try:
         backup = Backup()
         if not backup.check_device():

@@ -6,3 +6,4 @@ ansible.cfg
 *inventory
 docker
 temp*
+__pycache__
