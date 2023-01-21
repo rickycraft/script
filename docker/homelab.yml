@@ -1,0 +1,38 @@
+---
+version: "3"
+services:
+  uptime-kuma:
+    logging:
+      driver: "none"
+    container_name: uptime
+    image: "louislam/uptime-kuma"
+    #dns:
+    #  - 10.0.0.233
+    #  - 10.0.0.234
+    mem_limit: 200m
+    volumes:
+      - ${UPTIME?}:/app/data
+    environment:
+      TZ: "Europe/Rome"
+  nginx:
+    container_name: nginx-proxy-manager
+    image: "jc21/nginx-proxy-manager:latest"
+    mem_limit: 300m
+    volumes:
+      - ${DATA?}:/data
+      - ${CERTS?}:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    dns:
+      - 10.0.0.231
+      - 10.0.0.232
+    environment:
+      TZ: "Europe/Rome"
+      DB_SQLITE_FILE: "/data/database.sqlite"
+      DISABLE_IPV6: "true"
+networks:
+  default:
+    name: "homelab_net"
+    external: true
