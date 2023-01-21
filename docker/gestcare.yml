@@ -4,6 +4,7 @@ services:
   gestcare:
     container_name: "gest-care"
     image: "ghcr.io/rickycraft/gest-care:main"
+    restart: unless-stopped
     environment:
       - DATABASE_URL
       - IRON_TOKEN

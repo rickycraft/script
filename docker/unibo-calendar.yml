@@ -4,6 +4,7 @@ services:
   unibocalendar:
     container_name: "unibocalendar"
     image: "ghcr.io/rickycraft/unibo-calendar:main"
+    restart: unless-stopped
     environment:
       - DATABASE_URL
       - NEXT_PUBLIC_ADMIN_TOKEN
