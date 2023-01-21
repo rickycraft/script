@@ -4,6 +4,6 @@ vscode_settings.json
 files
 ansible.cfg
 *inventory
-docker
 temp*
 __pycache__
+proxmox/docker
