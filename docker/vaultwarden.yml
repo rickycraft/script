@@ -1,0 +1,21 @@
+---
+version: "3"
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: "vaultwarden/server"
+    mem_limit: 100m
+    restart: unless-stopped
+    volumes:
+      - ${DATA?}:/data
+    environment:
+      # EXTENDED_LOGGING: "true"
+      LOG_LEVEL: "info"
+      LOG_FILE: "/data/vaultwarden.log"
+      ICON_BLACKLIST_NON_GLOBAL_IPS: "false"
+      WEBSOCKET_ENABLED: "true"
+      TZ: "Europe/Rome"
+networks:
+  default:
+    name: "homelab_net"
+    external: true
