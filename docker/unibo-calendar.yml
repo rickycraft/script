@@ -1,0 +1,19 @@
+---
+version: "3"
+services:
+  unibocalendar:
+    container_name: "unibocalendar"
+    image: "ghcr.io/rickycraft/unibo-calendar:main"
+    # environment:
+    #   DATABASE_URL: ""
+    #   NEXT_PUBLIC_ADMIN_TOKEN: ""
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "udp://srvnas.roveri.local"
+        syslog-format: "rfc5424"
+        tag: "{{.Name}}"
+networks:
+  default:
+    name: "homelab_net"
+    external: true
