@@ -1,0 +1,20 @@
+---
+version: "3"
+services:
+  gestcare:
+    container_name: "gest-care"
+    image: "ghcr.io/rickycraft/gest-care:main"
+    environment:
+      - DATABASE_URL
+      - IRON_TOKEN
+      - NEXT_PUBLIC_GA_MEASUREMENT_ID
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "udp://srvnas.roveri.local"
+        syslog-format: "rfc5424"
+        tag: "{{.Name}}"
+networks:
+  default:
+    name: "homelab_net"
+    external: true
