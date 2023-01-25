@@ -4,6 +4,7 @@
     path: /etc/apt/apt.conf.d/60proxy
     line: 'Acquire::http { Proxy "http://srvapt.roveri.local:3142"; }'
     create: true
+    mode: 0644
 - name: "Update package list"
   ansible.builtin.apt:
     update_cache: true
@@ -14,3 +15,15 @@
     autoremove: true
     autoclean: true
   notify: "Restart"
+- name: "Install packages"
+  ansible.builtin.apt:
+    name:
+      - "apt-transport-https"
+      - "ca-certificates"
+      - "curl"
+      - "bash-completion"
+      - "git"
+      - "vim"
+      - "wget"
+      - "zsh"
+    state: present
