@@ -1,0 +1,96 @@
+---
+version: "3"
+services:
+  uptime-kuma:
+    env_file: ["homelab.env"]
+    image: "louislam/uptime-kuma"
+    container_name: uptime
+    volumes:
+      - ${UPT_DATA?}:/app/data
+    environment:
+      TZ: "Europe/Rome"
+    logging:
+      driver: "none"
+  nginx:
+    env_file: ["homelab.env"]
+    image: "jc21/nginx-proxy-manager:latest"
+    container_name: nginx-proxy-manager
+    volumes:
+      - ${NGX_DATA?}:/data
+      - ${SSL?}:/etc/letsencrypt
+    environment:
+      TZ: "Europe/Rome"
+      DB_SQLITE_FILE: "/data/database.sqlite"
+      DISABLE_IPV6: "true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    dns:
+      - 10.0.0.231
+      - 10.0.0.232
+  wireguard:
+    env_file: ["homelab.env"]
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    volumes:
+      - ${WG_DATA?}:/etc/wireguard
+    environment:
+      - WG_HOST=vpn.rroveri.com
+      - PASSWORD=${WGPASS?}
+      - WG_DEFAULT_DNS=10.0.0.233,10.0.0.234
+      - WG_DEFAULT_ADDRESS=10.0.1.x
+      - WG_ALLOWED_IPS=10.0.0.0/24
+    # - WG_PERSISTENT_KEEPALIVE=120
+    ports:
+      - "51820:51820/udp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+  vaultwarden:
+    env_file: ["homelab.env"]
+    image: "vaultwarden/server"
+    container_name: vaultwarden
+    volumes:
+      - ${VW_DATA?}:/data
+    environment:
+      # EXTENDED_LOGGING: "true"
+      LOG_LEVEL: "info"
+      LOG_FILE: "/data/vaultwarden.log"
+      ICON_BLACKLIST_NON_GLOBAL_IPS: "false"
+      WEBSOCKET_ENABLED: "true"
+      TZ: "Europe/Rome"
+  wiki-db:
+    env_file: ["homelab.env"]
+    image: postgres:14-alpine
+    container_name: wiki-db
+    volumes:
+      - ${WIKI_DATA?}:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_PASSWORD: ${DBPASS?}
+      POSTGRES_USER: wikijs
+    logging:
+      driver: "none"
+  wiki:
+    env_file: ["homelab.env"]
+    image: ghcr.io/requarks/wiki:2
+    container_name: wiki
+    depends_on: ["wiki-db"]
+    volumes:
+      - ${WIKI_BCK?}:/wiki/backup
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: ${DBPASS?}
+      DB_NAME: wiki
+      TZ: "Europe/Rome"
+networks:
+  default:
+    name: "homelab_net"
+    external: true
