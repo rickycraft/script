@@ -20,3 +20,10 @@
     line: "local0.* -/var/log/local0.log"
     mode: 0644
   notify: 'Restart rsyslog'
+- name: "Configure logrotate for local0"
+  ansible.builtin.lineinfile:
+    create: false
+    path: "/etc/logrotate.d/rsyslog"
+    line: "/var/log/local0.log"
+    insertbefore: '^\{'
+    mode: 0644
