@@ -1,0 +1,21 @@
+---
+- name: "Upgrade packages"
+  ansible.builtin.dnf:
+    update_cache: true
+    state: latest
+    update_only: true
+  notify: "Restart"
+- name: "Autoremove packages"
+  ansible.builtin.dnf:
+    autoremove: true
+- name: "Install packages"
+  ansible.builtin.dnf:
+    name:
+      - "ca-certificates"
+      - "curl"
+      - "bash-completion"
+      - "git"
+      - "vim"
+      - "wget"
+      - "zsh"
+    state: present
