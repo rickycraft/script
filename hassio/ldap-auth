@@ -79,6 +79,6 @@ fi
 
 log "User '$username' authenticated successfully."
 # For user meta
-echo "name = $username"
+echo "name = $username-ldap"
 type on_auth_success > /dev/null && on_auth_success
 exit 0
