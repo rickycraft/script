@@ -1,0 +1,82 @@
+#!/bin/sh
+
+########## CONFIGURATION ##########
+
+# Uncomment to enable debugging to stderr (prints full client output
+# and more).
+#DEBUG=1
+
+# Usernames should be validated using a regular expression to be of
+# a known format. Special characters will be escaped anyway, but it is
+# generally not recommended to allow more than necessary.
+# This pattern is set by default. In your config file, you can either
+# overwrite it with a different one or use "unset USERNAME_PATTERN" to
+# disable validation completely.
+USERNAME_PATTERN='^[a-z|A-Z|0-9|_|-|.]+$'
+
+# Adapt to your needs.
+SERVER="ldap://srvdc1.roveri.local:389"
+# Will try binding as this user.
+# ldap_dn_escape escapes special characters in strings to make them
+# usable within LDAP DN components.
+USERDN="cn=$username,dc=ad,dc=rroveri,dc=com"
+
+# When the timeout (in seconds) is exceeded (e.g. due to slow networking),
+# authentication fails.
+TIMEOUT=3
+
+########## END OF CONFIGURATION ##########
+
+# Log messages to stderr.
+log() {
+	echo "$1" >&2
+}
+
+ldap_auth_ldapsearch() {
+	common_opts="-o nettimeout=$TIMEOUT -H $SERVER -x"
+	[ -z "$DEBUG" ] || common_opts="-v $common_opts"
+	output=$(ldapwhoami $common_opts -D "$USERDN" -w $password)
+	[ $? -ne 0 ] && return 1
+	return 0
+}
+
+# Check username and password are present and not malformed.
+if [ -z "$username" ] || [ -z "$password" ]; then
+	log "Need username and password environment variables."
+	exit 2
+elif [ ! -z "$USERNAME_PATTERN" ]; then
+	username_match=$(echo "$username" | sed -r "s/$USERNAME_PATTERN/x/")
+	if [ "$username_match" != "x" ]; then
+		log "Username '$username' has an invalid format."
+		exit 2
+	fi
+fi
+
+# Do the authentication.
+ldap_auth_ldapsearch
+result=$?
+
+entries=0
+if [ $result -eq 0 ]; then
+	entries=$(echo "$output" | grep -cie '^dn\s*:')
+	[ "$entries" != "1" ] && result=1
+fi
+
+if [ ! -z "$DEBUG" ]; then
+	cat >&2 <<-EOF
+		Result: $result
+		Number of entries: $entries
+		Client output:
+		$output
+		EOF
+fi
+
+if [ $result -ne 0 ]; then
+	log "User '$username' failed to authenticate."
+	type on_auth_failure > /dev/null && on_auth_failure
+	exit 1
+fi
+
+log "User '$username' authenticated successfully."
+type on_auth_success > /dev/null && on_auth_success
+exit 0
