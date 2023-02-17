@@ -78,5 +78,7 @@ if [ $result -ne 0 ]; then
 fi
 
 log "User '$username' authenticated successfully."
+# For user meta
+echo "name = $username"
 type on_auth_success > /dev/null && on_auth_success
 exit 0
