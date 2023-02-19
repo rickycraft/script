@@ -1,0 +1,15 @@
+---
+- name: "Create .ssh directory"
+  ansible.builtin.file:
+    path: "/root/.ssh"
+    state: directory
+    mode: 0700
+- name: "Add keys to authorized_keys"
+  ansible.builtin.lineinfile:
+    path: "/root/.ssh/authorized_keys"
+    regexp: "{{ item.host }}"
+    line: "{{ item.key }}"
+    create: true
+    state: present
+    mode: 0600
+  with_items: "{{ ssh_keys }}"

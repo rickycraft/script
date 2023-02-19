@@ -21,3 +21,4 @@
     - backup
     - rsyslog
     - update
+    - ssh
