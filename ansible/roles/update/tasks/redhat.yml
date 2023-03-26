@@ -17,5 +17,4 @@
       - "git"
       - "vim"
       - "wget"
-      - "htop"
     state: present
