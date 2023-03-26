@@ -54,7 +54,7 @@
 - name: "Backup .ssh"
   ansible.builtin.fetch:
     src: "/root/.ssh/{{ item }}"
-    dest: "{{ bck_dir }}/{{ ansible_hostname }}/ssh"
+    dest: "{{ bck_dir }}/{{ ansible_hostname }}/{{ item }}"
     flat: true
   loop:
     - id_rsa
