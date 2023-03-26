@@ -24,6 +24,18 @@
       loop:
         - "HISTSIZE="
         - "HISTFILESIZE="
+    - name: "Set histcontrol"
+      lineinfile:
+        path: /root/.bashrc
+        regexp: "^#?HISTCONTROL"
+        line: "HISTCONTROL=ignoreboth"
+        state: present
+    - name: "Set histignore"
+      lineinfile:
+        path: /root/.bashrc
+        regexp: "^#?HISTIGNORE"
+        line: "HISTIGNORE=ls:cd"
+        state: present
   vars:
     bck_dir: "/home/rick/backups"
   roles:
