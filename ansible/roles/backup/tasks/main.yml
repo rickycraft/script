@@ -13,9 +13,9 @@
   when: crontabs.stdout_lines | length > 0
 - name: "List user scripts"
   ansible.builtin.shell: |
-   set -o pipefail
-   cd /usr/local/bin
-   (find . -maxdepth 1 -type f | cut -c3-)
+    set -o pipefail
+    cd /usr/local/bin
+    (find . -maxdepth 1 -type f | cut -c3-)
   args:
     executable: /bin/bash
   register: scripts
@@ -30,9 +30,9 @@
   when: scripts.stdout_lines | length > 0
 - name: "List user systemd units"
   ansible.builtin.shell: |
-   set -o pipefail
-   cd /etc/systemd/system
-   (find . -type f -name "*.service" | cut -c3-)
+    set -o pipefail
+    cd /etc/systemd/system
+    (find . -type f -name "*.service" | cut -c3-)
   args:
     executable: /bin/bash
   register: systemd
@@ -45,3 +45,18 @@
     flat: true
   with_items: "{{ systemd.stdout_lines }}"
   when: systemd.stdout_lines | length > 0
+- name: "Check if has .ssh"
+  ansible.builtin.stat:
+    path: "/root/.ssh/id_rsa"
+  register: ssh
+  changed_when: false
+  failed_when: false
+- name: "Backup .ssh"
+  ansible.builtin.fetch:
+    src: "/root/.ssh/{{ item }}"
+    dest: "{{ bck_dir }}/{{ ansible_hostname }}/ssh"
+    flat: true
+  loop:
+    - id_rsa
+    - id_rsa.pub
+  when: ssh.stat.exists
