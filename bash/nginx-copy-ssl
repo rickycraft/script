@@ -1,4 +1,4 @@
 #!/bin/sh
 
-scp -rO -P 222 /root/homelab/letsencrypt/live/npm-*/* srvnas:/volume1/cloud/Dotfiles/roveri.duckdns.org
-
+scp -qr -P 222 /root/homelab/letsencrypt/live/npm-14/* srvnas.roveri.local:/volume1/cloud/Dotfiles/rroveri.com
+echo "Copied ssl certificates"
