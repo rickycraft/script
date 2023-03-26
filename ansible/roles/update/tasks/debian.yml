@@ -25,5 +25,5 @@
       - "git"
       - "vim"
       - "wget"
-      - "zsh"
+      - "htop"
     state: present
