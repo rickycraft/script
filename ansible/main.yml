@@ -1,7 +1,7 @@
 ---
 - name: "Homelab"
   hosts: all
-  serial: 2
+  serial: 3
   become: true
   remote_user: root
   tasks:
