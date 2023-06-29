@@ -2,3 +2,5 @@
 - name: "Restart"
   ansible.builtin.reboot:
     msg: "restarting after update"
+  when:
+    - run_handlers
