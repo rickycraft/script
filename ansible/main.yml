@@ -16,7 +16,7 @@
       community.general.timezone:
         name: "Europe/Rome"
     - name: "Set infinite history"
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /root/.bashrc
         regexp: "^#?{{ item }}"
         line: "{{ item }}"
@@ -25,13 +25,13 @@
         - "HISTSIZE="
         - "HISTFILESIZE="
     - name: "Set histcontrol"
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /root/.bashrc
         regexp: "^#?HISTCONTROL"
-        line: "HISTCONTROL=ignoreboth"
+        line: "HISTCONTROL=ignoreboth:erasedups"
         state: present
     - name: "Set histignore"
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /root/.bashrc
         regexp: "^#?HISTIGNORE"
         line: "HISTIGNORE=ls:cd"
