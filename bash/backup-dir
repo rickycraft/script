@@ -4,14 +4,14 @@ test "$1" || exit 1
 BACKUP_DIR="/tmp"
 SRC_DIR=$(echo $1 | rev | cut -f1 -d/ | rev)
 BACKUP_NAME="$SRC_DIR.tar"
-REMOTE_DIR=/volume1/veeam/raspi
+REMOTE_DIR=/volume1/veeam/docker
 
 cd $1
 cd ..
 tar -cf "$BACKUP_DIR/$BACKUP_NAME" $SRC_DIR
 echo "Created backup $BACKUP_NAME"
 
-scp -O -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
+scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
 echo "Copied $BACKUP_NAME to srvnas"
 
 # Remove created zip file
