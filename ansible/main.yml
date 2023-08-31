@@ -39,6 +39,7 @@
   vars:
     bck_dir: "/home/rick/backups"
   roles:
+    - docker
     - backup
     - rsyslog
     - update

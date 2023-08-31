@@ -26,4 +26,5 @@
       - "vim"
       - "wget"
       - "htop"
+      - "python3-requests"
     state: present
