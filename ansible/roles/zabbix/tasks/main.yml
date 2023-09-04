@@ -1,0 +1,23 @@
+---
+- name: Gather package ansible_facts
+  ansible.builtin.package_facts:
+    manager: auto
+- name: Check if zabbix-agent2 is installed
+  ansible.builtin.set_fact:
+    zabbix_installed: "{{ 'zabbix-agent2' in ansible_facts.packages }}"
+- name: Force zabbix version to be installed
+  ansible.builtin.set_fact:
+    zabbix_valid_agent_versions: "{{ attributes | items2dict }}"
+  vars:
+    attributes:
+      - key: "{{ ansible_distribution_major_version }}"
+        value: [6.4]
+- name: Install zabbix-agent2
+  ansible.builtin.include_role:
+    name: community.zabbix.zabbix_agent
+  vars:
+    zabbix_agent2: true # noqa var-naming
+    zabbix_agent2_server: zabbix.roveri.local
+    zabbix_agent2_serveractive: zabbix.roveri.local
+    zabbix_agent_install_agent_only: true
+  when: not zabbix_installed and ansible_facts['os_family'] == "Debian"
