@@ -8,6 +8,7 @@
   ansible.builtin.shell:
     cmd: 'docker image ls --format {% raw %}"{{.Repository}}:{{.Tag}}"{% endraw %} | grep -v none' # noqa risky-shell-pipe
   register: docker_images_list
+  failed_when: false
   changed_when: false
   when: docker_installed.rc == 0
 - name: Pull all the images
@@ -15,4 +16,4 @@
     name: "{{ item }}"
     source: pull
   loop: "{{ docker_images_list.stdout_lines }}"
-  when: docker_installed.rc == 0
+  when: docker_installed.rc == 0 and docker_images_list.stdout_lines | length > 0
