@@ -15,27 +15,17 @@
     - name: "Set timezone Europe/Rome"
       community.general.timezone:
         name: "Europe/Rome"
-    - name: "Set infinite history"
+    - name: "Set bash history config"
       ansible.builtin.lineinfile:
         path: /root/.bashrc
-        regexp: "^#?{{ item }}"
-        line: "{{ item }}"
+        regexp: "^#?{{ item.key }}"
+        line: "{{ item.key }}={{ item.value }}"
         state: present
       loop:
-        - "HISTSIZE="
-        - "HISTFILESIZE="
-    - name: "Set histcontrol"
-      ansible.builtin.lineinfile:
-        path: /root/.bashrc
-        regexp: "^#?HISTCONTROL"
-        line: "HISTCONTROL=ignoreboth:erasedups"
-        state: present
-    - name: "Set histignore"
-      ansible.builtin.lineinfile:
-        path: /root/.bashrc
-        regexp: "^#?HISTIGNORE"
-        line: "HISTIGNORE=ls:cd"
-        state: present
+        - { key: "HISTSIZE", value: "" }
+        - { key: "HISTFILESIZE", value: "" }
+        - { key: "HISTCONTROL", value: "ignoreboth:erasedups" }
+        - { key: "HISTIGNORE", value: "ls:cd" }
   vars:
     bck_dir: "/home/rick/backups"
   roles:
