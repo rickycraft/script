@@ -1,30 +1,8 @@
 ---
-- name: "Add remote logging for notice+"
-  ansible.builtin.lineinfile:
-    create: true
-    path: "/etc/rsyslog.d/90-sendlog.conf"
-    line: "*.notice @srvnas.roveri.local"
-    mode: "0644"
-  notify: "Restart rsyslog"
-- name: "Add remote logging local0"
-  ansible.builtin.lineinfile:
-    create: true
-    path: "/etc/rsyslog.d/90-sendlog.conf"
-    line: "local0.* @srvnas.roveri.local"
-    mode: "0644"
-  notify: "Restart rsyslog"
-- name: "Add remote logging auth"
-  ansible.builtin.lineinfile:
-    create: true
-    path: "/etc/rsyslog.d/90-sendlog.conf"
-    line: "auth.* @srvnas.roveri.local"
-    mode: "0644"
-  notify: "Restart rsyslog"
-- name: "Add local logging local0"
-  ansible.builtin.lineinfile:
-    create: true
-    path: "/etc/rsyslog.d/90-sendlog.conf"
-    line: "local0.* -/var/log/local0.log"
+- name: "Add logging config"
+  ansible.builtin.copy:
+    src: "90-sendlog.conf"
+    dest: "/etc/rsyslog.d/90-sendlog.conf"
     mode: "0644"
   notify: "Restart rsyslog"
 - name: "Configure logrotate for local0"

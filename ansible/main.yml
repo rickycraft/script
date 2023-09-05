@@ -40,8 +40,8 @@
     bck_dir: "/home/rick/backups"
   roles:
     - update
-    - zabbix
     - docker
+    - zabbix
     - backup
     - rsyslog
     - ssh
