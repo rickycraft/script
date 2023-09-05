@@ -1,0 +1,19 @@
+---
+- name: List all Docker images
+  ansible.builtin.shell:
+    cmd: 'docker image ls --format {% raw %}"{{.Repository}}:{{.Tag}}"{% endraw %} | grep -v none' # noqa risky-shell-pipe
+  register: docker_images_list
+  failed_when: false
+  changed_when: false
+- name: Pull all the images
+  community.docker.docker_image:
+    name: "{{ item }}"
+    source: pull
+  loop: "{{ docker_images_list.stdout_lines }}"
+  when: docker_images_list.stdout_lines | length > 0
+- name: Configure rsyslog to ignore docker healthcheck
+  ansible.builtin.lineinfile:
+    path: /etc/rsyslog.conf
+    line: ':msg, startswith, "run-docker-runtime\x2drunc-moby-" ~'
+    insertafter: "IncludeConfig"
+    state: present
