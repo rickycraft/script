@@ -26,6 +26,8 @@
         - { key: "HISTFILESIZE", value: "" }
         - { key: "HISTCONTROL", value: "ignoreboth:erasedups" }
         - { key: "HISTIGNORE", value: "ls:cd" }
+        - { key: "export EDITOR", value: "vim" }
+        - { key: "export VISUAL", value: "$EDITOR" }
   vars:
     bck_dir: "/home/rick/backups"
   roles:
