@@ -14,6 +14,6 @@
 - name: Configure rsyslog to ignore docker healthcheck
   ansible.builtin.lineinfile:
     path: /etc/rsyslog.conf
-    line: ':msg, startswith, "run-docker-runtime\x2drunc-moby-" ~'
-    insertafter: "IncludeConfig"
+    line: ':msg, contains, "run-docker-runtime" stop'
+    insertbefore: "IncludeConfig"
     state: present

@@ -12,3 +12,16 @@
     line: "/var/log/local0.log"
     insertbefore: '^\{'
     mode: "0644"
+- name: "Configure syslog to be volatile"
+  community.general.ini_file:
+    section: Journal
+    path: "/etc/systemd/journald.conf"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    create: false
+    mode: "0644"
+  loop:
+    - { key: "Storage", value: "volatile" }
+    - { key: "RuntimeMaxUse", value: "100M" }
+  notify:
+    - Restart journald
