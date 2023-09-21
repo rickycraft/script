@@ -1,4 +1,4 @@
 #!/bin/sh
 
-scp -qr -P 222 /home/docker/homelab/ssl/live/npm-14/* srvnas.roveri.local:/volume1/cloud/Dotfiles/rroveri.com
+scp -qO -P 222 /home/docker/homelab/ssl/live/npm-14/* srvnas.roveri.local:/volume1/cloud/Dotfiles/rroveri.com
 echo "Copied ssl certificates"
