@@ -12,7 +12,7 @@
     line: "/var/log/local0.log"
     insertbefore: '^\{'
     mode: "0644"
-- name: "Configure syslog to be volatile"
+- name: "Configure journal to be volatile"
   community.general.ini_file:
     section: Journal
     path: "/etc/systemd/journald.conf"
