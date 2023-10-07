@@ -20,4 +20,4 @@
     zabbix_agent2_server: zabbix.roveri.local
     zabbix_agent2_serveractive: zabbix.roveri.local
     zabbix_agent_install_agent_only: true
-  when: not zabbix_installed and ansible_facts['os_family'] == "Debian"
+  when: not zabbix_installed and ansible_facts['distribution'] == "Debian"
