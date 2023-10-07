@@ -1,0 +1,11 @@
+---
+- name: Reconfigure nslcd
+  ansible.builtin.command:
+    cmd: "dpkg-reconfigure -f noninteractive nslcd"
+  notify: Restart nslcd
+  changed_when: true
+- name: Restart nslcd
+  ansible.builtin.systemd_service:
+    name: nslcd
+    state: restarted
+    enabled: true

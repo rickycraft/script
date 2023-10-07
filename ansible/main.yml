@@ -28,6 +28,10 @@
         - { key: "HISTIGNORE", value: "ls:cd" }
         - { key: "export EDITOR", value: "vim" }
         - { key: "export VISUAL", value: "$EDITOR" }
+    - name: "Install ldap"
+      ansible.builtin.include_role:
+        name: ldap
+      when: ansible_facts['os_family'] == "Debian"
   vars:
     bck_dir: "/home/rick/backups"
   roles:
