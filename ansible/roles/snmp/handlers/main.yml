@@ -1,0 +1,6 @@
+---
+- name: Restart SNMP
+  ansible.builtin.systemd:
+    name: snmpd
+    state: restarted
+    enabled: true

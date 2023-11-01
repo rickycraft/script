@@ -1,0 +1,20 @@
+- name: Ensure SNMP is installed
+  ansible.builtin.apt:
+    name: snmpd
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Ensure SNMP is installed
+  ansible.builtin.yum:
+    name: net-snmpd
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Copy SNMP configuration file
+  ansible.builtin.copy:
+    src: snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart SNMP

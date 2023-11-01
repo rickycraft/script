@@ -41,3 +41,4 @@
     - backup
     - rsyslog
     - ssh
+    - snmp
