@@ -37,7 +37,6 @@
   roles:
     - update
     - docker
-    - zabbix
     - backup
     - rsyslog
     - ssh
