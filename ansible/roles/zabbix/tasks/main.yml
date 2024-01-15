@@ -4,20 +4,33 @@
     manager: auto
 - name: Check if zabbix-agent2 is installed
   ansible.builtin.set_fact:
-    zabbix_installed: "{{ 'zabbix-agent2' in ansible_facts.packages }}"
-- name: Force zabbix version to be installed
+    zabbix2_installed: "{{ 'zabbix-agent2' in ansible_facts.packages }}"
+- name: Remove zabbix-agent2
+  ansible.builtin.package:
+    name: zabbix-agent2
+    state: absent
+  when: zabbix2_installed
+- name: Check if zabbix-agent is installed
   ansible.builtin.set_fact:
-    zabbix_valid_agent_versions: "{{ attributes | items2dict }}"
-  vars:
-    attributes:
-      - key: "{{ ansible_distribution_major_version }}"
-        value: [6.4]
-- name: Install zabbix-agent2
-  ansible.builtin.include_role:
-    name: community.zabbix.zabbix_agent
-  vars:
-    zabbix_agent2: true # noqa var-naming
-    zabbix_agent2_server: zabbix.roveri.local
-    zabbix_agent2_serveractive: zabbix.roveri.local
-    zabbix_agent_install_agent_only: true
-  when: not zabbix_installed and ansible_facts['distribution'] == "Debian"
+    zabbix_installed: "{{ 'zabbix-agent' in ansible_facts.packages }}"
+- name: Remove zabbix-agent
+  ansible.builtin.package:
+    name: zabbix-agent
+    state: absent
+  when: zabbix_installed
+# - name: Force zabbix version to be installed
+#   ansible.builtin.set_fact:
+#     zabbix_valid_agent_versions: "{{ attributes | items2dict }}"
+#   vars:
+#     attributes:
+#       - key: "{{ ansible_distribution_major_version }}"
+#         value: [6.4]
+# - name: Install zabbix-agent2
+#   ansible.builtin.include_role:
+#     name: community.zabbix.zabbix_agent
+#   vars:
+#     zabbix_agent2: true # noqa var-naming
+#     zabbix_agent2_server: zabbix.roveri.local
+#     zabbix_agent2_serveractive: zabbix.roveri.local
+#     zabbix_agent_install_agent_only: true
+#   when: not zabbix2_installed and ansible_facts['distribution'] == "Debian"
