@@ -1,8 +1,8 @@
 {
-  "log-driver": "syslog",
+  "log-driver": "gelf",
   "log-opts": {
           "tag": "docker-{{.Name}}",
-          "syslog-address": "udp://srvlog.roveri.local",
-          "syslog-facility": "local1"
+          "gelf-address": "udp://srvlog.roveri.local:12201",
+          "gelf-compression-type": "none"
   }
 }
