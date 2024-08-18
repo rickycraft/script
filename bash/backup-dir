@@ -11,7 +11,7 @@ cd ..
 tar -cf "$BACKUP_DIR/$BACKUP_NAME" $SRC_DIR
 echo "Created backup $BACKUP_NAME"
 
-scp -P 222 "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
+scp -P 222 -O "$BACKUP_DIR/$BACKUP_NAME" "root@srvnas.roveri.local:$REMOTE_DIR"
 echo "Copied $BACKUP_NAME to srvnas"
 
 # Remove created zip file
