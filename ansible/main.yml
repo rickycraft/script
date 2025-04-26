@@ -1,7 +1,7 @@
 ---
 - name: "Homelab"
   hosts: all
-  serial: 1
+  #serial: 1
   become: true
   remote_user: root
   tasks:
@@ -28,6 +28,23 @@
         - { key: "HISTIGNORE", value: "ls:cd" }
         - { key: "export EDITOR", value: "vim" }
         - { key: "export VISUAL", value: "$EDITOR" }
+    - name: "Create vimrc file"
+      ansible.builtin.file:
+        path: /root/.vimrc
+        state: touch
+        modification_time: preserve
+        access_time: preserve
+    - name: "Set vimrc config"
+      ansible.builtin.lineinfile:
+        path: /root/.vimrc
+        regexp: "^#?{{ item }}"
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "set expandtab"
+        - "set shiftwidth=2"
+        - "set softtabstop=2"
+        - "set tabstop=2"
     - name: "Install ldap"
       ansible.builtin.include_role:
         name: ldap
