@@ -1,0 +1,6 @@
+---
+- name: Restart NTP service
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    state: restarted
+    enabled: true

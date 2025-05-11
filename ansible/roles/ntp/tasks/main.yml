@@ -1,0 +1,13 @@
+---
+- name: Install NTP
+  ansible.builtin.apt:
+    name: systemd-timesyncd
+    state: present
+    update_cache: true
+
+- name: Configure NTP server
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/timesyncd.conf
+    regexp: '^#?NTP='
+    line: 'NTP=ntp.roveri.local'
+  notify: Restart NTP service

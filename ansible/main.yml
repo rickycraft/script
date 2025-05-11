@@ -1,7 +1,7 @@
 ---
 - name: "Homelab"
   hosts: all
-  #serial: 1
+  # serial: 1
   become: true
   remote_user: root
   tasks:
@@ -32,6 +32,7 @@
       ansible.builtin.file:
         path: /root/.vimrc
         state: touch
+        mode: "0644"
         modification_time: preserve
         access_time: preserve
     - name: "Set vimrc config"
@@ -48,6 +49,10 @@
     - name: "Install ldap"
       ansible.builtin.include_role:
         name: ldap
+      when: ansible_facts['os_family'] == "Debian"
+    - name: "Configure ntp"
+      ansible.builtin.include_role:
+        name: ntp
       when: ansible_facts['os_family'] == "Debian"
   vars:
     bck_dir: "/home/rick/backups"
