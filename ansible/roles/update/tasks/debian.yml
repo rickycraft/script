@@ -8,14 +8,16 @@
 - name: "Update package list"
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
+  #  cache_valid_time: 3600
 - name: "Upgrade packages"
   ansible.builtin.apt:
     upgrade: true
     autoremove: true
     autoclean: true
   notify: "Restart"
-  timeout: 180
+  async: 600
+  poll: 10
+  #timeout: 180
 - name: "Install packages"
   ansible.builtin.apt:
     name:
@@ -30,3 +32,4 @@
       - "python3-requests"
       - "rsyslog"
     state: present
+
