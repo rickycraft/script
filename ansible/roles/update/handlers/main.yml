@@ -4,3 +4,9 @@
     msg: "restarting after update"
   when:
     - run_handlers
+  listen: "Restart"
+
+- name: "Clean APT cache"
+  ansible.builtin.apt:
+    autoclean: true
+  listen: "Restart"
