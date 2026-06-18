@@ -1,7 +1,7 @@
 ---
 - name: "Homelab"
   hosts: all
-  # serial: 1
+  serial: 4
   become: true
   remote_user: root
   tasks:
@@ -15,6 +15,16 @@
     - name: "Set timezone Europe/Rome"
       community.general.timezone:
         name: "Europe/Rome"
+    - name: "Configure resolv.conf"
+      ansible.builtin.copy:
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          search ad.rroveri.com
+          nameserver 10.0.0.231
+          nameserver 10.0.0.220
     - name: "Set bash history config"
       ansible.builtin.lineinfile:
         path: /root/.bashrc

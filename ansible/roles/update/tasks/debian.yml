@@ -32,4 +32,10 @@
       - "python3-requests"
       - "rsyslog"
     state: present
-
+- name: "Install qemu guest agent on VMs"
+  ansible.builtin.apt:
+    name: "qemu-guest-agent"
+    state: present
+  when:
+    - ansible_facts['virtualization_role'] == "guest"
+    - ansible_facts['virtualization_type'] != "lxc"

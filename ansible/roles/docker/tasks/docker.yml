@@ -5,12 +5,19 @@
   register: docker_images_list
   failed_when: false
   changed_when: false
-- name: Pull all the images
-  community.docker.docker_image:
-    name: "{{ item }}"
-    source: pull
+- name: Pull all Docker images
+  ansible.builtin.command:
+    argv:
+      - docker
+      - image
+      - pull
+      - "{{ item }}"
   loop: "{{ docker_images_list.stdout_lines }}"
   when: docker_images_list.stdout_lines | length > 0
+  register: docker_pull_result
+  changed_when: >
+    'Downloaded newer image' in docker_pull_result.stdout
+    or 'Downloaded newer image' in docker_pull_result.stderr
 - name: Configure rsyslog to ignore docker healthcheck
   ansible.builtin.lineinfile:
     path: /etc/rsyslog.conf
