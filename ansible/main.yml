@@ -12,6 +12,7 @@
         sysctl_set: true
         state: present
         reload: true
+        sysctl_file: /etc/sysctl.d/99-disable-ipv6.conf
     - name: "Set timezone Europe/Rome"
       community.general.timezone:
         name: "Europe/Rome"
