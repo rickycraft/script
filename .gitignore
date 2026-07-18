@@ -3,7 +3,6 @@ vscode_settings.json
 .vscode
 ansible.cfg
 *inventory
-temp*
 __pycache__
 proxmox/docker
 ansible/roles/ssh/vars/main.yml

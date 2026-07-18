@@ -1,0 +1,5 @@
+---
+unattended_upgrades_calendar: "Mon *-*-* 09:00:00"
+unattended_upgrades_randomized_delay: "3h"
+unattended_upgrades_automatic_reboot: true
+unattended_upgrades_automatic_reboot_with_users: true

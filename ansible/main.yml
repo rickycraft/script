@@ -65,6 +65,10 @@
       ansible.builtin.include_role:
         name: ntp
       when: ansible_facts['os_family'] == "Debian"
+    - name: "Configure unattended upgrades"
+      ansible.builtin.include_role:
+        name: unattended_upgrades
+      when: ansible_facts['os_family'] == "Debian"
   vars:
     bck_dir: "/home/rick/backups"
   roles:
