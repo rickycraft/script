@@ -2,7 +2,7 @@
   "log-driver": "gelf",
   "log-opts": {
           "tag": "docker-{{.Name}}",
-          "gelf-address": "udp://srvlog.roveri.local:12201",
+          "gelf-address": "udp://srvlog.ad.rroveri.com:12201",
           "gelf-compression-type": "none"
   }
 }

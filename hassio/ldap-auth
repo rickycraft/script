@@ -15,7 +15,7 @@
 USERNAME_PATTERN='^[a-z|A-Z|0-9|_|-|.]+$'
 
 # Adapt to your needs.
-SERVER="ldap://srvdc1.roveri.local:389"
+SERVER="ldap://ad.rroveri.com:389"
 # Will try binding as this user.
 # ldap_dn_escape escapes special characters in strings to make them
 # usable within LDAP DN components.

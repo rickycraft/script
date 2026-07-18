@@ -10,7 +10,7 @@
     - {
         question: "nslcd/ldap-uris",
         vtype: "string",
-        value: "ldap://srvdc1.roveri.local",
+        value: "ldap://ad.rroveri.com",
       }
     - { question: "nslcd/ldap-auth-type", vtype: "string", value: "none" }
     - { question: "nslcd/ldap-starttls", vtype: "boolean", value: "false" }
@@ -40,7 +40,7 @@
     regexp: "{{ item.regexp }}"
   loop:
     - { regexp: "^base", line: "base dc=ad,dc=rroveri,dc=com" }
-    - { regexp: "^uri", line: "uri ldap://srvdc1.roveri.local" }
+    - { regexp: "^uri", line: "uri ldap://ad.rroveri.com" }
   notify: Restart nslcd
 - name: Update nsswitch.conf for LDAP integration
   ansible.builtin.lineinfile:

@@ -10,7 +10,7 @@ fi
 
 if [[ ! -d "$LOCAL_DIR/sdcard" ]]; then
   echo '######### MOUNT NFS #########'
-  pkexec mount -t nfs -o nfsvers=4,noexec srvnas.roveri.local:$REMOTE_DIR $LOCAL_DIR
+  pkexec mount -t nfs -o nfsvers=4,noexec srvnas:$REMOTE_DIR $LOCAL_DIR
   if [[ $? != 0 ]]; then
     echo "Cannot mount nfs"
     exit 1

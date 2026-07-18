@@ -8,6 +8,6 @@
 - name: Configure NTP server
   ansible.builtin.lineinfile:
     path: /etc/systemd/timesyncd.conf
-    regexp: '^#?NTP='
-    line: 'NTP=ntp.roveri.local'
+    regexp: "^#?NTP="
+    line: "NTP=ntp.ad.rroveri.com"
   notify: Restart NTP service

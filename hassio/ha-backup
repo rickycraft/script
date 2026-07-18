@@ -20,7 +20,7 @@ while read -r backname; do
 	n=$((n + 1))
 done <"$LISTBCK"
 
-scp -P 222 "$BACKUP_DIR"/*.tar "root@srvnas.roveri.local:$REMOTE_DIR"
+scp -P 222 "$BACKUP_DIR"/*.tar "root@srvnas:$REMOTE_DIR"
 echo "Copied $BACKUP_SLUG.tar to remote"
 
 ssh srvnas "ls -t1 $REMOTE_DIR" | grep tar >"$LISTBCK"
@@ -34,7 +34,7 @@ while read -r backname; do
 done <"$LISTBCK"
 
 # Copy the latest slug with date
-ha backups ls | egrep "(date|slug):" | ssh -p 222 root@srvnas.roveri.local "cat > $REMOTE_DIR/latest.txt"
+ha backups ls | egrep "(date|slug):" | ssh -p 222 root@srvnas "cat > $REMOTE_DIR/latest.txt"
 
 # Remove tempfile
 rm "$LISTBCK"
