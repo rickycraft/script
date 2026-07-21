@@ -15,6 +15,7 @@
   loop: "{{ docker_images_list.stdout_lines }}"
   when: docker_images_list.stdout_lines | length > 0
   register: docker_pull_result
+  ignore_errors: true
   changed_when: >
     'Downloaded newer image' in docker_pull_result.stdout
     or 'Downloaded newer image' in docker_pull_result.stderr
